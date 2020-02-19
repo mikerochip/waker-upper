@@ -228,7 +228,7 @@ namespace WakerUpper.Application.Pages
             {
                 PhoneNumberOptions.Add(new SelectListItem
                 {
-                    Text = parameter.Name,
+                    Text = parameter.Name.Substring(parameter.Name.LastIndexOf('/')),
                     Value = parameter.Value,
                 });
             }
