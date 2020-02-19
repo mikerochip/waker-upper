@@ -1,0 +1,52 @@
+﻿@page "{handler?}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Waker Upper";
+}
+
+<script>
+    function changePhoneNumber()
+    {
+        const phoneNumberList = document.getElementById("PhoneNumberList");
+        const phoneNumber = document.getElementById("PhoneNumber");
+        phoneNumber.value = phoneNumberList.value;
+    }
+</script>
+
+<form method="post">
+    @if (Model.IsEnabled)
+    {
+        <h1>Waker Upper Is On</h1>
+        <div>
+            <button type="submit" asp-page-handler="TurnOff">Turn Off</button>
+        </div>
+    }
+    else
+    {
+        <h1>Waker Upper Is Off</h1>
+        <div>
+            <button type="submit" asp-page-handler="TurnOn">Turn On</button>
+        </div>
+    }
+    <hr />
+    <h2>Settings</h2>
+    <div asp-validation-summary="@ValidationSummary.All"></div>
+    <div>
+        Phone Number<br/>
+        <input id="PhoneNumber" asp-for="PhoneNumber"/><br />
+        <select id="PhoneNumberList" asp-items="Model.PhoneNumberOptions" onchange="changePhoneNumber()">
+            <option selected value="">Choose a Number</option>
+        </select>
+        <span asp-validation-for="PhoneNumber"></span><br/>
+        <br/>
+    </div>
+    <div>
+        Message<br/>
+        <textarea asp-for="Message"></textarea><br/>
+        <span asp-validation-for="Message"></span><br/>
+        <br/>
+    </div>
+    <div>
+        <button type="submit" asp-page-handler="SaveParameters">Save</button>
+    </div>
+</form>

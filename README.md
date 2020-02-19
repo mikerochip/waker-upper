@@ -1,2 +1,2 @@
 # waker-upper
-Serverless AWS app to wake fools up!
+Serverless ASP.NET Core AWS app to wake fools up!
