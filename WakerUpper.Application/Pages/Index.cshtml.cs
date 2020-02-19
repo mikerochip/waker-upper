@@ -223,7 +223,7 @@ namespace WakerUpper.Application.Pages
             {
                 PhoneNumberOptions.Add(new SelectListItem
                 {
-                    Text = parameter.Name.Substring(parameter.Name.LastIndexOf('/')),
+                    Text = parameter.Name.Substring(parameter.Name.LastIndexOf('/') + 1),
                     Value = parameter.Value,
                 });
             }
