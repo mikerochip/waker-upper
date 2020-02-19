@@ -224,7 +224,9 @@ namespace WakerUpper.Application.Pages
             GetParametersByPathResponse response = await _ssm.GetParametersByPathAsync(request);
 
             PhoneNumberOptions.Clear();
-            foreach (Parameter parameter in response.Parameters)
+            
+            IEnumerable<Parameter> sortedParameters = (from p in response.Parameters orderby p.Name select p);
+            foreach (Parameter parameter in sortedParameters)
             {
                 PhoneNumberOptions.Add(new SelectListItem
                 {
