@@ -20,18 +20,11 @@ namespace WakerUpper.Application.Pages
 {
     public class IndexModel : PageModel
     {
-        #region Constants
-        private const string SendEventRuleNameEnvVar = "SendEventRuleName";
-        private const string TargetPhoneNumberEnvVar = "TargetPhoneNumberParameter";
-        private const string MessageEnvVar = "MessageParameter";
-        private const string PhoneNumberOptionsEnvVar = "PhoneNumberOptionsParameterPath"; 
-        #endregion
-        
         #region Properties
-        private string SendEventRuleName { get; } = Environment.GetEnvironmentVariable(SendEventRuleNameEnvVar);
-        private string TargetPhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable(TargetPhoneNumberEnvVar);
-        private string MessageParameterName { get; } = Environment.GetEnvironmentVariable(MessageEnvVar);
-        private string PhoneNumberOptionsParameterPath { get; } = Environment.GetEnvironmentVariable(PhoneNumberOptionsEnvVar);
+        private string SendEventRuleName { get; } = Environment.GetEnvironmentVariable("SendEventRuleName");
+        private string TargetPhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable("TargetPhoneNumberParameter");
+        private string MessageParameterName { get; } = Environment.GetEnvironmentVariable("MessageParameter");
+        private string PhoneNumberOptionsParameterPath { get; } = Environment.GetEnvironmentVariable("PhoneNumberOptionsParameterPath");
         #endregion
 
         #region Members

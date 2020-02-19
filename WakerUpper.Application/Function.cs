@@ -22,25 +22,16 @@ namespace WakerUpper.Application
 {
     public class Function
     {
-        #region Constants
-        private const string SendEventRuleNameEnvVar = "SendEventRuleName";
-        private const string TwilioAccountSidEnvVar = "TwilioAccountSidParameter";
-        private const string TwilioAuthTokenEnvVar = "TwilioAuthTokenParameter";
-        private const string SourcePhoneNumberEnvVar = "SourcePhoneNumberParameter";
-        private const string TargetPhoneNumberEnvVar = "TargetPhoneNumberParameter";
-        private const string MessageEnvVar = "MessageParameter";
-        #endregion
-
         #region Properties
         private AmazonSimpleSystemsManagementClient SsmClient => _ssmClient.Value;
         private AmazonCloudWatchEventsClient CweClient => _cweClient.Value;
 
-        private string SendEventRuleName { get; } = Environment.GetEnvironmentVariable(SendEventRuleNameEnvVar);
-        private string TwilioAccountSidParameterName { get; } = Environment.GetEnvironmentVariable(TwilioAccountSidEnvVar);
-        private string TwilioAuthTokenParameterName { get; } = Environment.GetEnvironmentVariable(TwilioAuthTokenEnvVar);
-        private string SourcePhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable(SourcePhoneNumberEnvVar);
-        private string TargetPhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable(TargetPhoneNumberEnvVar);
-        private string MessageParameterName { get; } = Environment.GetEnvironmentVariable(MessageEnvVar);
+        private string SendEventRuleName { get; } = Environment.GetEnvironmentVariable("SendEventRuleName");
+        private string TwilioAccountSidParameterName { get; } = Environment.GetEnvironmentVariable("TwilioAccountSidParameter");
+        private string TwilioAuthTokenParameterName { get; } = Environment.GetEnvironmentVariable("TwilioAuthTokenParameter");
+        private string SourcePhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable("SourcePhoneNumberParameter");
+        private string TargetPhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable("TargetPhoneNumberParameter");
+        private string MessageParameterName { get; } = Environment.GetEnvironmentVariable("MessageParameter");
         
         private string TwilioAccountSid { get; set; }
         private string TwilioAuthToken { get; set; }
@@ -49,11 +40,11 @@ namespace WakerUpper.Application
         #region Members
         private Lazy<AmazonSimpleSystemsManagementClient> _ssmClient =
             new Lazy<AmazonSimpleSystemsManagementClient>(
-                new AmazonSimpleSystemsManagementClient()
+                () => new AmazonSimpleSystemsManagementClient()
             );
         private Lazy<AmazonCloudWatchEventsClient> _cweClient =
             new Lazy<AmazonCloudWatchEventsClient>(
-                new AmazonCloudWatchEventsClient()
+                () => new AmazonCloudWatchEventsClient()
             );
 
         private Dictionary<string, string> _parameterValues = new Dictionary<string, string>();
