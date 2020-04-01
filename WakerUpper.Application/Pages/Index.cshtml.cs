@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace WakerUpper.Application.Pages
@@ -173,7 +172,7 @@ namespace WakerUpper.Application.Pages
         {
             var lambdaContext = (ILambdaContext)HttpContext.Items[AbstractAspNetCoreFunction.LAMBDA_CONTEXT];
 
-            JObject obj = JObject.FromObject(new
+            string json = JsonSerializer.Serialize(new
             {
                 Event = eventName,
                 LambdaRequestId = lambdaContext.AwsRequestId,
@@ -188,7 +187,7 @@ namespace WakerUpper.Application.Pages
                 IsEnabled = IsEnabled,
                 ModelState = ModelState,
             });
-            _logger.LogInformation(obj.ToString(Formatting.None));
+            _logger.LogInformation(json);
         }
 
         private async Task FillParameterValuesAsync(params string[] parameterNames)

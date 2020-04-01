@@ -5,18 +5,19 @@ using Amazon.Lambda.CloudWatchEvents.ScheduledEvents;
 using Amazon.Lambda.Core;
 using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Formatting;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.TwiML;
 using Twilio.TwiML.Messaging;
 
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.LambdaJsonSerializer))]
 
 namespace WakerUpper.Application
 {
@@ -92,13 +93,14 @@ namespace WakerUpper.Application
 
         public async Task<APIGatewayProxyResponse> ReceiveSmsAsync(APIGatewayProxyRequest proxyRequest, ILambdaContext context)
         {
-            FormDataCollection payload = new FormDataCollection(proxyRequest.Body);
+            Dictionary<string, StringValues> payload = QueryHelpers.ParseQuery(proxyRequest.Body);
 
             LogJson(new
             {
                 Event = "Request",
                 RequestId = context.AwsRequestId,
                 Headers = proxyRequest.Headers,
+                Body = proxyRequest.Body,
                 Message = payload["Body"],
                 Payload = payload,
             });
@@ -165,7 +167,7 @@ namespace WakerUpper.Application
 
         private static void LogJson(object obj)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(obj));
+            Console.WriteLine(JsonSerializer.Serialize(obj));
         }
         #endregion
     }

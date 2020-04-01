@@ -5,12 +5,12 @@
 
   "Globals": {
     "Function": {
-      "Runtime": "dotnetcore2.1",
+      "Runtime": "dotnetcore3.1",
       "MemorySize": 512,
       "Timeout": 30,
       "Tracing": "PassThrough",
       "AutoPublishAlias": "Live",
-      "CodeUri": "bin/Release/netcoreapp2.1/publish",
+      "CodeUri": "bin/Release/netcoreapp3.1/publish",
       "Environment": {
         "Variables": {
           "TwilioAccountSidParameter": "/WakerUpper/TwilioAccountSid",

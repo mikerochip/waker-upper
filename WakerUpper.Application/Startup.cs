@@ -3,7 +3,7 @@ using Amazon.SimpleSystemsManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,7 +23,7 @@ namespace WakerUpper.Application
         private IConfiguration Configuration { get; }
         #endregion
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -45,11 +45,10 @@ namespace WakerUpper.Application
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddRazorPages();
+
             services.AddDataProtection()
                 .PersistKeysToAWSSystemsManager(AspKeysParameterName);
-
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddLogging(builder => builder
                 .ClearProviders()
@@ -69,7 +68,7 @@ namespace WakerUpper.Application
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -81,11 +80,16 @@ namespace WakerUpper.Application
                 app.UseHsts();
             }
 
+            app.UseCookiePolicy();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
-
-            app.UseMvc();
+            app.UseRouting();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
     }
 }
