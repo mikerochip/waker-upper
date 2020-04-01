@@ -6,8 +6,8 @@ phases:
     commands:
       - dotnet tool install -g Amazon.Lambda.Tools --version 4.0.0
       # this bullshit line provided by https://github.com/dotnet/sdk/issues/9304#issuecomment-494226139
-      - echo "$(dirname "$(readlink "$(command -v dotnet)")")"
-      - export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
+      - echo "$(dirname $(realpath $(which dotnet)))"
+      - export DOTNET_ROOT=$(dirname $(realpath $(which dotnet)))
   pre_build:
     commands:
       - echo "ProjectPath $ProjectPath"
