@@ -92,7 +92,8 @@ namespace WakerUpper.Application
 
         public async Task<APIGatewayProxyResponse> ReceiveSmsAsync(APIGatewayProxyRequest proxyRequest, ILambdaContext context)
         {
-            Dictionary<string, StringValues> payload = QueryHelpers.ParseQuery(proxyRequest.Body);
+            Dictionary<string, string> payload = QueryHelpers.ParseQuery(proxyRequest.Body)
+                .ToDictionary(pair => pair.Key, pair=> pair.Value.FirstOrDefault());
 
             AppLogger.LogJson(new
             {
