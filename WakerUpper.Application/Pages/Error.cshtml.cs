@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
+using System.Text.Json;
 
 namespace WakerUpper.Application.Pages
 {
@@ -43,7 +42,7 @@ namespace WakerUpper.Application.Pages
             var exceptionInfo = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             Exception exception = exceptionInfo?.Error;
             
-            JObject obj = JObject.FromObject(new
+            string json = JsonSerializer.Serialize(new
             {
                 Event = "Request",
                 RequestId = RequestId,
@@ -53,7 +52,7 @@ namespace WakerUpper.Application.Pages
                 Exception = exception?.GetType().Name,
                 ExceptionMessage = exception?.Message,
             });
-            _logger.LogInformation(obj.ToString(Formatting.None));
+            _logger.LogInformation(json);
         }
     }
 }

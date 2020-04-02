@@ -3,9 +3,6 @@ using Amazon.Lambda.AspNetCoreServer;
 using Amazon.Lambda.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace WakerUpper.Application
 {
@@ -23,12 +20,11 @@ namespace WakerUpper.Application
         {
             base.PostMarshallRequestFeature(aspNetCoreRequestFeature, lambdaRequest, lambdaContext);
 
-            JObject errorObj = JObject.FromObject(new
+            AppLogger.LogJson(new
             {
                 Event = "Request",
                 RequestId = lambdaContext.AwsRequestId,
             });
-            Console.WriteLine(errorObj.ToString(Formatting.None));
         }
 
         protected override void PostMarshallResponseFeature(
@@ -38,12 +34,11 @@ namespace WakerUpper.Application
         {
             base.PostMarshallResponseFeature(aspNetCoreResponseFeature, lambdaResponse, lambdaContext);
 
-            JObject errorObj = JObject.FromObject(new
+            AppLogger.LogJson(new
             {
                 Event = "Response",
                 RequestId = lambdaContext.AwsRequestId,
             });
-            Console.WriteLine(errorObj.ToString(Formatting.None));
         }
     }
 }

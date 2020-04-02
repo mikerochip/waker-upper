@@ -10,7 +10,6 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -68,7 +67,7 @@ namespace WakerUpper.Application
             string targetPhoneNumber = _parameterValues[TargetPhoneNumberParameterName];
             string message = _parameterValues[MessageParameterName];
 
-            LogJson(new
+            AppLogger.LogJson(new
             {
                 Event = "Request",
                 RequestId = context.AwsRequestId,
@@ -83,7 +82,7 @@ namespace WakerUpper.Application
                 to: new Twilio.Types.PhoneNumber(targetPhoneNumber)
             );
 
-            LogJson(new
+            AppLogger.LogJson(new
             {
                 Event = "Response",
                 RequestId = context.AwsRequestId,
@@ -95,7 +94,7 @@ namespace WakerUpper.Application
         {
             Dictionary<string, StringValues> payload = QueryHelpers.ParseQuery(proxyRequest.Body);
 
-            LogJson(new
+            AppLogger.LogJson(new
             {
                 Event = "Request",
                 RequestId = context.AwsRequestId,
@@ -116,7 +115,7 @@ namespace WakerUpper.Application
             response.Append(message);
             string responseBody = response.ToString();
 
-            LogJson(new
+            AppLogger.LogJson(new
             {
                 Event = "Response",
                 RequestId = context.AwsRequestId,
@@ -163,11 +162,6 @@ namespace WakerUpper.Application
             TwilioClient.Init(accountSid, authToken);
             TwilioAccountSid = accountSid;
             TwilioAuthToken = authToken;
-        }
-
-        private static void LogJson(object obj)
-        {
-            Console.WriteLine(JsonSerializer.Serialize(obj));
         }
         #endregion
     }
