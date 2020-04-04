@@ -9,8 +9,11 @@
       "MemorySize": 512,
       "Timeout": 30,
       "Tracing": "PassThrough",
-      "AutoPublishAlias": "Live",
       "CodeUri": "bin/Release/netcoreapp3.1/publish",
+      "AutoPublishAlias": "Live",
+      "DeploymentPreference": {
+        "Type": "AllAtOnce"
+      },
       "Environment": {
         "Variables": {
           "TwilioAccountSidParameter": "/WakerUpper/TwilioAccountSid",
@@ -21,9 +24,6 @@
           "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
           "MessageParameter": { "Ref": "MessageParameter" }
         }
-      },
-      "DeploymentPreference": {
-        "Type": "AllAtOnce"
       }
     }
   },
