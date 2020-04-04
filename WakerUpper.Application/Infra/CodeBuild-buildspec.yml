@@ -28,6 +28,7 @@ phases:
          --output-template bin/$OutputTemplateFileName
          --s3-bucket $ArtifactBucket
          --s3-prefix $ArtifactBucketPrefix/
+         --msbuild-parameters "/p:PublishReadyToRun=true --self-contained false"
 artifacts:
   base-directory: $ProjectPath
   files:
