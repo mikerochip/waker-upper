@@ -19,6 +19,20 @@ namespace WakerUpper.Application.Pages
 {
     public class IndexModel : PageModel
     {
+        #region Model Properties
+        [BindProperty]
+        [Phone]
+        public string PhoneNumber { get; set; }
+        
+        public List<SelectListItem> PhoneNumberOptions { get; } = new List<SelectListItem>();
+        
+        [BindProperty]
+        [MinLength(1), MaxLength(1000)]
+        public string Message { get; set; }
+        
+        public bool IsEnabled { get; set; }
+        #endregion
+
         #region Properties
         private string SendEventRuleName { get; } = Environment.GetEnvironmentVariable("SendEventRuleName");
         private string TargetPhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable("TargetPhoneNumberParameter");
@@ -33,20 +47,6 @@ namespace WakerUpper.Application.Pages
         private IAmazonSimpleSystemsManagement _ssm;
 
         private Dictionary<string, string> _parameterValues = new Dictionary<string, string>();
-        #endregion
-
-        #region Properties
-        [BindProperty]
-        [Phone]
-        public string PhoneNumber { get; set; }
-        
-        public List<SelectListItem> PhoneNumberOptions { get; } = new List<SelectListItem>();
-        
-        [BindProperty]
-        [MinLength(1), MaxLength(1000)]
-        public string Message { get; set; }
-        
-        public bool IsEnabled { get; set; }
         #endregion
 
         #region Body
