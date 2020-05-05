@@ -9,17 +9,17 @@
 
   <ItemGroup>
     <PackageReference Include="Amazon.AspNetCore.DataProtection.SSM" Version="1.1.0" />
-    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.0.0" />
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.1.1" />
     <PackageReference Include="Amazon.Lambda.CloudWatchEvents" Version="2.0.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
     <PackageReference Include="Amazon.Lambda.Logging.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.7.0" />
-    <PackageReference Include="AWSSDK.CloudWatchEvents" Version="3.3.102.23" />
+    <PackageReference Include="AWSSDK.CloudWatchEvents" Version="3.3.102.38" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.3.119.14" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.3.121.1" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.0.0" />
-    <PackageReference Include="Twilio" Version="5.39.0" />
+    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.1.0" />
+    <PackageReference Include="Twilio" Version="5.40.0" />
   </ItemGroup>
 
   <ItemGroup>
