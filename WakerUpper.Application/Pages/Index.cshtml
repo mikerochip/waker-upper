@@ -18,14 +18,14 @@
     {
         <h1>Waker Upper Is On</h1>
         <div>
-            <button type="submit" asp-page-handler="TurnOff">Turn Off</button>
+            <button type="submit" asp-page-handler="Enable" asp-route-enable="False">Turn Off</button>
         </div>
     }
     else
     {
         <h1>Waker Upper Is Off</h1>
         <div>
-            <button type="submit" asp-page-handler="TurnOn">Turn On</button>
+            <button type="submit" asp-page-handler="Enable" asp-route-enable="True">Turn On</button>
         </div>
     }
     <hr />

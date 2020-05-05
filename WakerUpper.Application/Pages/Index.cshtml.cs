@@ -83,34 +83,33 @@ namespace WakerUpper.Application.Pages
             LogPageResponse(nameof(OnGetAsync));
         }
 
-        public async Task<IActionResult> OnPostTurnOnAsync()
+        public async Task<IActionResult> OnPostEnableAsync(bool enable)
         {
-            LogPageRequest(nameof(OnPostTurnOnAsync));
-            
-            EnableRuleRequest request = new EnableRuleRequest
-            {
-                Name = SendEventRuleName,
-            };
-            await _cloudWatchEvents.EnableRuleAsync(request);
-            
-            LogPageResponse(nameof(OnPostTurnOnAsync));
-            
-            if (ModelState.IsValid)
-                return RedirectToPage();
-            return Page();
-        }
+            LogPageRequest(nameof(OnPostEnableAsync));
 
-        public async Task<IActionResult> OnPostTurnOffAsync()
-        {
-            LogPageRequest(nameof(OnPostTurnOffAsync));
+            List<Task> tasks = new List<Task>();
+            tasks.Add(UpdatePhoneNumberAsync());
+            tasks.Add(UpdateMessageAsync());
+            await Task.WhenAll(tasks);
             
-            DisableRuleRequest request = new DisableRuleRequest
+            if (enable)
             {
-                Name = SendEventRuleName,
-            };
-            await _cloudWatchEvents.DisableRuleAsync(request);
+                EnableRuleRequest request = new EnableRuleRequest
+                {
+                    Name = SendEventRuleName,
+                };
+                await _cloudWatchEvents.EnableRuleAsync(request);
+            }
+            else
+            {
+                DisableRuleRequest request = new DisableRuleRequest
+                {
+                    Name = SendEventRuleName,
+                };
+                await _cloudWatchEvents.DisableRuleAsync(request);
+            }
             
-            LogPageResponse(nameof(OnPostTurnOffAsync));
+            LogPageResponse(nameof(OnPostEnableAsync));
             
             if (ModelState.IsValid)
                 return RedirectToPage();
@@ -123,8 +122,10 @@ namespace WakerUpper.Application.Pages
             
             if (ModelState.IsValid)
             {
-                await UpdatePhoneNumberAsync();
-                await UpdateMessageAsync();
+                List<Task> tasks = new List<Task>();
+                tasks.Add(UpdatePhoneNumberAsync());
+                tasks.Add(UpdateMessageAsync());
+                await Task.WhenAll(tasks);
             }
             
             LogPageResponse(nameof(OnPostSaveParametersAsync));
@@ -132,28 +133,6 @@ namespace WakerUpper.Application.Pages
             if (ModelState.IsValid)
                 return RedirectToPage();
             return Page();
-
-            async Task UpdatePhoneNumberAsync()
-            {
-                PutParameterRequest request = new PutParameterRequest
-                {
-                    Name = TargetPhoneNumberParameterName,
-                    Overwrite = true,
-                    Value = PhoneNumber,
-                };
-                await _ssm.PutParameterAsync(request);
-            }
-
-            async Task UpdateMessageAsync()
-            {
-                PutParameterRequest request = new PutParameterRequest
-                {
-                    Name = MessageParameterName,
-                    Overwrite = true,
-                    Value = Message,
-                };
-                await _ssm.PutParameterAsync(request);
-            }
         }
         #endregion
 
@@ -226,6 +205,28 @@ namespace WakerUpper.Application.Pages
                     Value = parameter.Value,
                 });
             }
+        }
+
+        private async Task UpdatePhoneNumberAsync()
+        {
+            PutParameterRequest request = new PutParameterRequest
+            {
+                Name = TargetPhoneNumberParameterName,
+                Overwrite = true,
+                Value = PhoneNumber,
+            };
+            await _ssm.PutParameterAsync(request);
+        }
+
+        private async Task UpdateMessageAsync()
+        {
+            PutParameterRequest request = new PutParameterRequest
+            {
+                Name = MessageParameterName,
+                Overwrite = true,
+                Value = Message,
+            };
+            await _ssm.PutParameterAsync(request);
         }
         #endregion
     }
