@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Application", "WakerUpper.Application\WakerUpper.Application.csproj", "{F4F20DA9-A7C4-4EBD-8388-1B05E4A6CCA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Infra", "WakerUpper.Infra\WakerUpper.Infra.csproj", "{FD8184C3-3A7F-4643-B990-351BDA4280FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{F4F20DA9-A7C4-4EBD-8388-1B05E4A6CCA6}.Release|x64.Build.0 = Release|Any CPU
 		{F4F20DA9-A7C4-4EBD-8388-1B05E4A6CCA6}.Release|x86.ActiveCfg = Release|Any CPU
 		{F4F20DA9-A7C4-4EBD-8388-1B05E4A6CCA6}.Release|x86.Build.0 = Release|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Debug|x64.Build.0 = Debug|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Debug|x86.Build.0 = Debug|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Release|x64.ActiveCfg = Release|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Release|x64.Build.0 = Release|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD8184C3-3A7F-4643-B990-351BDA4280FB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
