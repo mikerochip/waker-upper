@@ -5,6 +5,6 @@ namespace WakerUpper.Infra
 {
     internal static class Program
     {
-        private static Task<int> Main() => Deployment.RunAsync<MyStack>();
+        private static Task<int> Main() => Deployment.RunAsync<PipelineStack>();
     }
 }
