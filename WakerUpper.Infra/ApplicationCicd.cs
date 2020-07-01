@@ -3,7 +3,10 @@ using Pulumi.Github;
 using Pulumi.Github.Inputs;
 using Pulumi.Aws.Iam;
 using Pulumi.Aws.Iam.Inputs;
+using Pulumi.Aws.CloudWatch;
+using Pulumi.Aws.CloudWatch.Inputs;
 using Pulumi.Aws.CodeBuild;
+using Pulumi.Aws.CodeBuild.Inputs;
 using Pulumi.Aws.CodePipeline;
 using Pulumi.Aws.CodePipeline.Inputs;
 using Pulumi.Aws.S3;
@@ -29,7 +32,7 @@ namespace WakerUpper.Infra
         {
             Bucket bucket = CreateArtifactBucket();
             Role pipelineRole = CreatePipelineRole();
-            Project buildProject = CreateBuildProject();
+            Project buildProject = CreateBuildProject(bucket);
             Role cloudFormationRole = CreateCloudFormationRole();
             Pipeline pipeline = CreatePipeline(bucket, pipelineRole, buildProject, cloudFormationRole);
             PipelineWebhook webhook = CreatePipelineWebhook(pipeline);
@@ -69,7 +72,7 @@ namespace WakerUpper.Infra
 
         private Role CreateRole(string name, string principal, params string[] managedPolicyArns)
         {
-            Output<GetPolicyDocumentResult> policy = Output.Create(GetPolicyDocument.InvokeAsync(new GetPolicyDocumentArgs
+            Output<GetPolicyDocumentResult> policyDocument = Output.Create(GetPolicyDocument.InvokeAsync(new GetPolicyDocumentArgs
             {
                 Statements =
                 {
@@ -90,7 +93,7 @@ namespace WakerUpper.Infra
             
             Role role = new Role(name, new RoleArgs
             {
-                AssumeRolePolicy = policy.Apply(p => p.Json),
+                AssumeRolePolicy = policyDocument.Apply(p => p.Json),
                 Path = "/",
             });
 
@@ -105,18 +108,111 @@ namespace WakerUpper.Infra
             return role;
         }
 
-        private Project CreateBuildProject()
+        private Project CreateBuildProject(Bucket bucket)
+        {
+            Role role = CreateBuildRole();
+            
+            Project project = new Project("WakerUpper", new ProjectArgs
+            {
+                ServiceRole = role.Arn,
+                Artifacts = new ProjectArtifactsArgs
+                {
+                    Type = "CODEPIPELINE",
+                },
+                Source = new ProjectSourceArgs
+                {
+                    Type = "CODEPIPELINE",
+                    Buildspec = "WakerUpper.Infra/App.buildspec.yml",
+                },
+                Environment = new ProjectEnvironmentArgs
+                {
+                    ComputeType = "BUILD_GENERAL1_SMALL",
+                    Type = "LINUX_CONTAINER",
+                    Image = "aws/codebuild/amazonlinux2-x86_64-standard:3.0",
+                    EnvironmentVariables =
+                    {
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "ProjectPath",
+                            Value = "WakerUpper.Application",
+                        },
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "Framework",
+                            Value = "netcoreapp3.1",
+                        },
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "Configuration",
+                            Value = "Release",
+                        },
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "ArtifactBucket",
+                            Value = bucket.BucketName,
+                        },
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "ArtifactBucketPrefix",
+                            Value = "WakerUpper/Builds",
+                        },
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "TemplateFileName",
+                            Value = "template.json",
+                        },
+                        new ProjectEnvironmentEnvironmentVariableArgs
+                        {
+                            Name = "OutputTemplateFileName",
+                            Value = "output-template.json",
+                        },
+                    }
+                }
+            });
+            
+            LogGroup logGroup = new LogGroup("WakerUpperBuilder", new LogGroupArgs
+            {
+                Name = $"/aws/codebuild/{project.Name}",
+                RetentionInDays = 1,
+            });
+            
+            return project;
+        }
+
+        private Role CreateBuildRole()
         {
             Role role = CreateRole(
                 "WakerUpperBuild",
                 "codebuild.amazonaws.com",
                 "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess");
             
-            Project project = new Project("WakerUpper", new ProjectArgs
+            // add permissions not covered by the managed policies
+            Output<GetPolicyDocumentResult> policyDocument = Output.Create(GetPolicyDocument.InvokeAsync(new GetPolicyDocumentArgs
             {
-                
+                Statements =
+                {
+                    new GetPolicyDocumentStatementArgs
+                    {
+                        Resources = { "*" },
+                        Actions =
+                        {
+                            "logs:CreateLogGroup",
+                            "logs:CreateLogStream",
+                            "logs:PutLogEvents",
+                            "s3:GetObject",
+                            "s3:GetObjectVersion",
+                            "s3:PutObject",
+                        },
+                    }
+                }
+            }));
+            RolePolicy policy = new RolePolicy("WakerUpperBuilder", new RolePolicyArgs
+            {
+                Role = role.Id,
+                Policy = policyDocument.Apply(p => p.Json),
             });
-            return project;
+
+            return role;
         }
         
         private Pipeline CreatePipeline(Bucket bucket, Role pipelineRole, Project buildProject, Role cloudFormationRole)
