@@ -21,7 +21,7 @@ namespace WakerUpper.Infra
     {
         #region Properties
         private InfraStack Stack { get; }
-        private Config ProjectConfig { get; } = new Config();
+        private Config Config { get; } = new Config();
         private Config GitHubConfig { get; } = new Config("github");
         #endregion
         
@@ -220,10 +220,10 @@ namespace WakerUpper.Infra
                                 Version = "1",
                                 Configuration =
                                 {
-                                    { "Owner", GitHubConfig.Require("owner") },
-                                    { "Repo", GitHubConfig.Require("repo") },
-                                    { "Branch", GitHubConfig.Require("branch") },
-                                    { "OAuthToken", GitHubConfig.RequireSecret("accessToken") },
+                                    { "Owner", Config.Require("githubOwner") },
+                                    { "Repo", Config.Require("githubRepo") },
+                                    { "Branch", Config.Require("githubBranch") },
+                                    { "OAuthToken", GitHubConfig.RequireSecret("token") },
                                     { "PollForSourceChanges", "false" },
                                 },
                                 OutputArtifacts = { "SourceArtifact" },
@@ -302,14 +302,14 @@ namespace WakerUpper.Infra
         #region Webhooks
         private PipelineWebhook CreatePipelineWebhook(Pipeline pipeline)
         {
-            string branch = GitHubConfig.Require("branch");
+            string branch = Config.Require("githubBranch");
             
             PipelineWebhook webhook = new PipelineWebhook("WakerUpper", new PipelineWebhookArgs
             {
                 Authentication = "GITHUB_HMAC",
                 AuthenticationConfiguration = new WebhookAuthenticationConfigurationArgs
                 {
-                    SecretToken = ProjectConfig.RequireSecret("webhookSecret"),
+                    SecretToken = Config.RequireSecret("webhookSecret"),
                 },
                 Filters = new WebhookFilterArgs
                 {
@@ -327,7 +327,7 @@ namespace WakerUpper.Infra
 
         private void CreateRepoWebhook(PipelineWebhook pipelineWebhook)
         {
-            string repo = GitHubConfig.Require("repo");
+            string repo = Config.Require("githubRepo");
             
             RepositoryWebhook repoWebhook = new RepositoryWebhook($"Pulumi-CodePipeline", new RepositoryWebhookArgs
             {
@@ -337,7 +337,7 @@ namespace WakerUpper.Infra
                 {
                     ContentType = "json",
                     InsecureSsl = false,
-                    Secret = ProjectConfig.RequireSecret("webhookSecret"),
+                    Secret = Config.RequireSecret("webhookSecret"),
                     Url = pipelineWebhook.Url,
                 }
             });
