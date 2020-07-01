@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 
-namespace WakerUpper.Application
+namespace WakerUpper.App
 {
     // this is just a placeholder to be able to DI a plain ILogger
     public class AppLogger

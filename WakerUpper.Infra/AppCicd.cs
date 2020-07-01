@@ -106,7 +106,7 @@ namespace WakerUpper.Infra
                         new ProjectEnvironmentEnvironmentVariableArgs
                         {
                             Name = "ProjectPath",
-                            Value = "WakerUpper.Application",
+                            Value = "WakerUpper.App",
                         },
                         new ProjectEnvironmentEnvironmentVariableArgs
                         {
