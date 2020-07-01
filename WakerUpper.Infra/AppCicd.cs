@@ -4,7 +4,6 @@ using Pulumi.Github.Inputs;
 using Pulumi.Aws.Iam;
 using Pulumi.Aws.Iam.Inputs;
 using Pulumi.Aws.CloudWatch;
-using Pulumi.Aws.CloudWatch.Inputs;
 using Pulumi.Aws.CodeBuild;
 using Pulumi.Aws.CodeBuild.Inputs;
 using Pulumi.Aws.CodePipeline;
@@ -18,12 +17,12 @@ using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
-    internal class ApplicationCicd
+    internal class AppCicd
     {
         private InfraStack Stack { get; }
         private Config Config { get; } = new Config();
         
-        public ApplicationCicd(InfraStack stack)
+        public AppCicd(InfraStack stack)
         {
             Stack = stack;
         }
