@@ -55,7 +55,7 @@ namespace WakerUpper.Infra
 
         private Role CreatePipelineRole()
         {
-            return CreateRole(
+            return IamUtil.CreateRole(
                 "WakerUpperPipeline",
                 "codepipeline.amazonaws.com",
                 "arn:aws:iam::aws:policy/AdministratorAccess");
@@ -63,48 +63,10 @@ namespace WakerUpper.Infra
 
         private Role CreateCloudFormationRole()
         {
-            return CreateRole(
+            return IamUtil.CreateRole(
                 "WakerUpperCloudFormation",
                 "cloudformation.amazonaws.com",
                 "arn:aws:iam::aws:policy/AdministratorAccess");
-        }
-
-        private Role CreateRole(string name, string principal, params string[] managedPolicyArns)
-        {
-            Output<GetPolicyDocumentResult> policyDocument = Output.Create(GetPolicyDocument.InvokeAsync(new GetPolicyDocumentArgs
-            {
-                Statements =
-                {
-                    new GetPolicyDocumentStatementArgs
-                    {
-                        Actions = { "sts:AssumeRole" },
-                        Principals =
-                        {
-                            new GetPolicyDocumentStatementPrincipalArgs
-                            {
-                                Type = "Service",
-                                Identifiers = { principal },
-                            }
-                        }
-                    }
-                }
-            }));
-            
-            Role role = new Role(name, new RoleArgs
-            {
-                AssumeRolePolicy = policyDocument.Apply(p => p.Json),
-                Path = "/",
-            });
-
-            foreach (string policyArn in managedPolicyArns)
-            {
-                RolePolicyAttachment attachment = new RolePolicyAttachment($"{name}Attachment", new RolePolicyAttachmentArgs
-                {
-                    Role = role.Name,
-                    PolicyArn = policyArn,
-                });
-            }
-            return role;
         }
 
         private Project CreateBuildProject(Bucket bucket)
@@ -180,7 +142,7 @@ namespace WakerUpper.Infra
 
         private Role CreateBuildRole()
         {
-            Role role = CreateRole(
+            Role role = IamUtil.CreateRole(
                 "WakerUpperBuild",
                 "codebuild.amazonaws.com",
                 "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess");
