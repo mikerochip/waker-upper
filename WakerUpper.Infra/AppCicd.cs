@@ -50,6 +50,7 @@ namespace WakerUpper.Infra
             {
                 LifecycleRules = new BucketLifecycleRuleArgs
                 {
+                    Enabled = true,
                     Expiration = new BucketLifecycleRuleExpirationArgs
                     {
                         Days = 1,
