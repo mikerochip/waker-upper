@@ -15,14 +15,14 @@ using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
-    class InfraStack : Stack
+    class CicdStack : Stack
     {
         [Output]
-        public Output<string> WebhookUrl { get; set; }
+        public Output<string> PipelineWebhookUrl { get; set; }
         
         private Config Config { get; set; }
         
-        public InfraStack()
+        public CicdStack()
         {
             Config = new Config();
             
@@ -149,7 +149,7 @@ namespace WakerUpper.Infra
                 TargetPipeline = pipeline.Name,
             });
             
-            WebhookUrl = webhook.Url;
+            PipelineWebhookUrl = webhook.Url;
             
             return webhook;
         }
