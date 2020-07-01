@@ -195,7 +195,98 @@ namespace WakerUpper.Infra
                 {
                     Type = "S3",
                     Location = bucket.BucketName,
-                }
+                },
+                RoleArn = pipelineRole.Arn,
+                Stages =
+                {
+                    new PipelineStageArgs
+                    {
+                        Name = "Source",
+                        Actions =
+                        {
+                            new PipelineStageActionArgs
+                            {
+                                Name = "Source",
+                                Category = "Source",
+                                Owner = "ThirdParty",
+                                Provider = "GitHub",
+                                Version = "1",
+                                Configuration =
+                                {
+                                    { "Owner", Config.Require("github:owner") },
+                                    { "Repo", Config.Require("github:repo") },
+                                    { "Branch", Config.Require("github:branch") },
+                                    { "OAuthToken", Config.Require("github:accessToken") },
+                                    { "PollForSourceChanges", "false" },
+                                },
+                                OutputArtifacts = { "SourceArtifact" },
+                            },
+                        },
+                    },
+                    new PipelineStageArgs
+                    {
+                        Name = "Build",
+                        Actions =
+                        {
+                            new PipelineStageActionArgs
+                            {
+                                Name = "Build",
+                                Category = "Build",
+                                Owner = "AWS",
+                                Provider = "CodeBuild",
+                                Version = "1",
+                                InputArtifacts = { "SourceArtifact" },
+                                Configuration =
+                                {
+                                    { "ProjectName", buildProject.Name },
+                                },
+                                OutputArtifacts = { "BuildArtifact" },
+                            },
+                        },
+                    },
+                    new PipelineStageArgs
+                    {
+                        Name = "Deploy",
+                        Actions =
+                        {
+                            new PipelineStageActionArgs
+                            {
+                                Name = "CreateChangeSet",
+                                Category = "Deploy",
+                                Owner = "AWS",
+                                Provider = "CloudFormation",
+                                Version = "1",
+                                InputArtifacts = { "BuildArtifact" },
+                                Configuration =
+                                {
+                                    { "ActionMode", "CHANGE_SET_REPLACE" },
+                                    { "StackName", "WakerUpper" },
+                                    { "ChangeSetName", "CodePipelineChangeSet" },
+                                    { "TemplatePath", "BuildArtifact::output-template.json" },
+                                    { "Capabilities", "CAPABILITY_NAMED_IAM" },
+                                    { "RoleArn", cloudFormationRole.Arn },
+                                },
+                                RunOrder = 1,
+                            },
+                            new PipelineStageActionArgs
+                            {
+                                Name = "ExecuteChangeSet",
+                                Category = "Deploy",
+                                Owner = "AWS",
+                                Provider = "CloudFormation",
+                                Version = "1",
+                                Configuration =
+                                {
+                                    { "ActionMode", "CHANGE_SET_EXECUTE" },
+                                    { "StackName", "WakerUpper" },
+                                    { "ChangeSetName", "CodePipelineChangeSet" },
+                                    { "RoleArn", cloudFormationRole.Arn },
+                                },
+                                RunOrder = 2,
+                            },
+                        },
+                    },
+                },
             });
             return pipeline;
         }
@@ -204,7 +295,7 @@ namespace WakerUpper.Infra
         #region Webhooks
         private PipelineWebhook CreatePipelineWebhook(Pipeline pipeline)
         {
-            string branch = Config.Require("branch");
+            string branch = Config.Require("github:branch");
             
             PipelineWebhook webhook = new PipelineWebhook("WakerUpper", new PipelineWebhookArgs
             {
@@ -229,9 +320,11 @@ namespace WakerUpper.Infra
 
         private void CreateRepoWebhook(PipelineWebhook pipelineWebhook)
         {
+            string repo = Config.Require("github:repo");
+            
             RepositoryWebhook repoWebhook = new RepositoryWebhook($"Pulumi-CodePipeline", new RepositoryWebhookArgs
             {
-                Repository = "waker-upper",
+                Repository = repo,
                 Events = "push",
                 Configuration = new RepositoryWebhookConfigurationArgs
                 {
