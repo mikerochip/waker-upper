@@ -19,9 +19,12 @@ namespace WakerUpper.Infra
 {
     internal class AppCicd
     {
+        #region Properties
         private InfraStack Stack { get; }
         private Config Config { get; } = new Config();
+        #endregion
         
+        #region Initialization
         public AppCicd(InfraStack stack)
         {
             Stack = stack;
@@ -37,7 +40,9 @@ namespace WakerUpper.Infra
             PipelineWebhook webhook = CreatePipelineWebhook(pipeline);
             CreateRepoWebhook(webhook);
         }
+        #endregion
 
+        #region Artifacts
         private Bucket CreateArtifactBucket()
         {
             Bucket bucket = new Bucket("waker-upper-artifacts", new BucketArgs
@@ -52,7 +57,9 @@ namespace WakerUpper.Infra
             });
             return bucket;
         }
+        #endregion
 
+        #region Roles
         private Role CreatePipelineRole()
         {
             return IamUtil.CreateRole(
@@ -68,7 +75,9 @@ namespace WakerUpper.Infra
                 "cloudformation.amazonaws.com",
                 "arn:aws:iam::aws:policy/AdministratorAccess");
         }
+        #endregion
 
+        #region BuildProject
         private Project CreateBuildProject(Bucket bucket)
         {
             Role role = CreateBuildRole();
@@ -175,7 +184,9 @@ namespace WakerUpper.Infra
 
             return role;
         }
-        
+        #endregion
+
+        #region Pipeline
         private Pipeline CreatePipeline(Bucket bucket, Role pipelineRole, Project buildProject, Role cloudFormationRole)
         {
             Pipeline pipeline = new Pipeline("WakerUpper", new PipelineArgs
@@ -188,7 +199,9 @@ namespace WakerUpper.Infra
             });
             return pipeline;
         }
+        #endregion
 
+        #region Webhooks
         private PipelineWebhook CreatePipelineWebhook(Pipeline pipeline)
         {
             string branch = Config.Require("branch");
@@ -229,5 +242,6 @@ namespace WakerUpper.Infra
                 }
             });
         }
+        #endregion
     }
 }
