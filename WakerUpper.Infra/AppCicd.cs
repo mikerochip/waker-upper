@@ -140,11 +140,16 @@ namespace WakerUpper.Infra
                 }
             });
             
-            LogGroup logGroup = new LogGroup("WakerUpperBuilder", new LogGroupArgs
-            {
-                Name = $"/aws/codebuild/{project.Name}",
-                RetentionInDays = 1,
-            });
+            LogGroup logGroup = new LogGroup("WakerUpperBuilder",
+                new LogGroupArgs
+                {
+                    Name = Output.Format($"/aws/codebuild/{project.Name}"),
+                    RetentionInDays = 1,
+                },
+                new CustomResourceOptions
+                {
+                    Parent = project,
+                });
             
             return project;
         }
