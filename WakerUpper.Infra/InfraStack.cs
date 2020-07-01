@@ -15,14 +15,14 @@ using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
-    class CicdStack : Stack
+    class InfraStack : Stack
     {
         [Output]
         public Output<string> PipelineWebhookUrl { get; set; }
         
         private Config Config { get; set; }
         
-        public CicdStack()
+        public InfraStack()
         {
             Config = new Config();
             
@@ -133,6 +133,8 @@ namespace WakerUpper.Infra
 
         private PipelineWebhook CreatePipelineWebhook(Pipeline pipeline)
         {
+            string branch = Config.Require("branch");
+            
             PipelineWebhook webhook = new PipelineWebhook("WakerUpper", new PipelineWebhookArgs
             {
                 Authentication = "GITHUB_HMAC",
@@ -143,7 +145,7 @@ namespace WakerUpper.Infra
                 Filters = new WebhookFilterArgs
                 {
                     JsonPath = "$.ref",
-                    MatchEquals = "refs/heads/master",
+                    MatchEquals = $"refs/heads/{branch}",
                 },
                 TargetAction = "Source",
                 TargetPipeline = pipeline.Name,

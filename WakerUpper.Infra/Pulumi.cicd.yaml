@@ -1,4 +1,0 @@
-config:
-  aws:region: us-west-2
-  waker-upper:webhookSecret:
-    secure: AAABAGe7oCSr2b2FS/E5JpPMsq87vRiZX6iJ5WM+ZF7vcszD9c755ZBzxu9S+4Cmqg77DUAkmWr/v2ANxb2ane2nihg=
