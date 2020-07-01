@@ -1,12 +1,17 @@
 using Pulumi;
+using Pulumi.Github;
+using Pulumi.Github.Inputs;
 using Pulumi.Aws.Iam;
 using Pulumi.Aws.Iam.Inputs;
 using Pulumi.Aws.CodeBuild;
-using Pulumi.Aws.CodeBuild.Inputs;
 using Pulumi.Aws.CodePipeline;
 using Pulumi.Aws.CodePipeline.Inputs;
 using Pulumi.Aws.S3;
 using Pulumi.Aws.S3.Inputs;
+
+using Config = Pulumi.Config;
+using PipelineWebhook = Pulumi.Aws.CodePipeline.Webhook;
+using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
@@ -15,29 +20,32 @@ namespace WakerUpper.Infra
         [Output]
         public Output<string> WebhookUrl { get; set; }
         
+        private Config Config { get; set; }
+        
         public PipelineStack()
         {
+            Config = new Config();
+            
             Bucket bucket = CreateArtifactBucket();
             Role pipelineRole = CreatePipelineRole();
             Project buildProject = CreateBuildProject();
             Role cloudFormationRole = CreateCloudFormationRole();
-            CreatePipeline(bucket, pipelineRole, buildProject, cloudFormationRole);
+            Pipeline pipeline = CreatePipeline(bucket, pipelineRole, buildProject, cloudFormationRole);
+            PipelineWebhook webhook = CreatePipelineWebhook(pipeline);
+            CreateRepoWebhook(webhook);
         }
 
         private Bucket CreateArtifactBucket()
         {
             Bucket bucket = new Bucket("waker-upper-artifacts", new BucketArgs
             {
-                LifecycleRules = new InputList<BucketLifecycleRuleArgs>
+                LifecycleRules = new BucketLifecycleRuleArgs
                 {
-                    new BucketLifecycleRuleArgs
+                    Expiration = new BucketLifecycleRuleExpirationArgs
                     {
-                        Expiration = new BucketLifecycleRuleExpirationArgs
-                        {
-                            Days = 1,
-                        }
-                    }
-                }
+                        Days = 1,
+                    },
+                },
             });
             return bucket;
         }
@@ -110,7 +118,7 @@ namespace WakerUpper.Infra
             return project;
         }
         
-        private void CreatePipeline(Bucket bucket, Role pipelineRole, Project buildProject, Role cloudFormationRole)
+        private Pipeline CreatePipeline(Bucket bucket, Role pipelineRole, Project buildProject, Role cloudFormationRole)
         {
             Pipeline pipeline = new Pipeline("WakerUpper", new PipelineArgs
             {
@@ -118,6 +126,46 @@ namespace WakerUpper.Infra
                 {
                     Type = "S3",
                     Location = bucket.BucketName,
+                }
+            });
+            return pipeline;
+        }
+
+        private PipelineWebhook CreatePipelineWebhook(Pipeline pipeline)
+        {
+            PipelineWebhook webhook = new PipelineWebhook("WakerUpper", new PipelineWebhookArgs
+            {
+                Authentication = "GITHUB_HMAC",
+                AuthenticationConfiguration = new WebhookAuthenticationConfigurationArgs
+                {
+                    SecretToken = Config.RequireSecret("webhookSecret"),
+                },
+                Filters = new WebhookFilterArgs
+                {
+                    JsonPath = "$.ref",
+                    MatchEquals = "refs/heads/master",
+                },
+                TargetAction = "Source",
+                TargetPipeline = pipeline.Name,
+            });
+            
+            WebhookUrl = webhook.Url;
+            
+            return webhook;
+        }
+
+        private void CreateRepoWebhook(PipelineWebhook pipelineWebhook)
+        {
+            RepositoryWebhook repoWebhook = new RepositoryWebhook($"Pulumi-CodePipeline", new RepositoryWebhookArgs
+            {
+                Repository = "waker-upper",
+                Events = "push",
+                Configuration = new RepositoryWebhookConfigurationArgs
+                {
+                    ContentType = "json",
+                    InsecureSsl = false,
+                    Secret = Config.RequireSecret("webhookSecret"),
+                    Url = pipelineWebhook.Url,
                 }
             });
         }
