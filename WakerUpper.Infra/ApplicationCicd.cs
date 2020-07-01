@@ -18,12 +18,11 @@ namespace WakerUpper.Infra
     internal class ApplicationCicd
     {
         private InfraStack Stack { get; }
-        private Config Config { get; set; }
+        private Config Config { get; } = new Config();
         
         public ApplicationCicd(InfraStack stack)
         {
             Stack = stack;
-            Config = new Config();
         }
 
         public void CreateResources()
