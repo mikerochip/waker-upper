@@ -17,7 +17,7 @@ using Twilio.TwiML.Messaging;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace WakerUpper.App
+namespace WakerUpper.Application
 {
     public class Function
     {

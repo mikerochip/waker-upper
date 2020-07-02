@@ -4,7 +4,7 @@ using Amazon.Lambda.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 
-namespace WakerUpper.App
+namespace WakerUpper.Application
 {
     public class LambdaAspEntryPoint : APIGatewayProxyFunction
     {

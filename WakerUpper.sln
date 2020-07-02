@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.App", "WakerUpper.App\WakerUpper.App.csproj", "{F4F20DA9-A7C4-4EBD-8388-1B05E4A6CCA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Application", "WakerUpper.Application\WakerUpper.Application.csproj", "{F4F20DA9-A7C4-4EBD-8388-1B05E4A6CCA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Infra", "WakerUpper.Infra\WakerUpper.Infra.csproj", "{FD8184C3-3A7F-4643-B990-351BDA4280FB}"
 EndProject

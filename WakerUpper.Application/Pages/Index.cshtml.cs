@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace WakerUpper.App.Pages
+namespace WakerUpper.Application.Pages
 {
     public class IndexModel : PageModel
     {
