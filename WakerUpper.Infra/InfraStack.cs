@@ -9,8 +9,8 @@ namespace WakerUpper.Infra
         
         public InfraStack()
         {
-            AppCicd cicd = new AppCicd(this);
-            cicd.CreateResources();
+            AppPipeline pipeline = new AppPipeline(this);
+            pipeline.CreateResources();
         }
     }
 }

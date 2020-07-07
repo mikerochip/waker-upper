@@ -17,7 +17,7 @@ using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
-    internal class AppCicd
+    internal class AppPipeline
     {
         #region Properties
         private InfraStack Stack { get; }
@@ -26,7 +26,7 @@ namespace WakerUpper.Infra
         #endregion
         
         #region Initialization
-        public AppCicd(InfraStack stack)
+        public AppPipeline(InfraStack stack)
         {
             Stack = stack;
         }
