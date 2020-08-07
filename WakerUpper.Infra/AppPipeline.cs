@@ -251,7 +251,7 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "Build",
+                                Name = "BuildAsp",
                                 Category = "Build",
                                 Owner = "AWS",
                                 Provider = "CodeBuild",
