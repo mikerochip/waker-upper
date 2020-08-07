@@ -277,7 +277,7 @@ namespace WakerUpper.Infra
                         {
                             new PipelineStageActionArgs
                             {
-                                Name = "CreateChangeSet",
+                                Name = "SmsCreateChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
@@ -307,7 +307,7 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "ExecuteChangeSet",
+                                Name = "SmsExecuteChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
@@ -323,7 +323,7 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "CreateChangeSet",
+                                Name = "AspCreateChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
@@ -350,7 +350,7 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "ExecuteChangeSet",
+                                Name = "AspExecuteChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
