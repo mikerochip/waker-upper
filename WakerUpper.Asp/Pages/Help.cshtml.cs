@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WakerUpper.Application.Pages
+namespace WakerUpper.Asp.Pages
 {
     public class HelpModel : PageModel
     {

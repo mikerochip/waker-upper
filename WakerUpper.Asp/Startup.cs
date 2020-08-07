@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace WakerUpper.Application
+namespace WakerUpper.Asp
 {
     public class Startup
     {
