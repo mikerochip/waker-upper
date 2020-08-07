@@ -57,7 +57,7 @@
     "SendSms": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "WakerUpper.Asp::WakerUpper.Asp.Function::SendSmsAsync",
+        "Handler": "WakerUpper.Sms::WakerUpper.Sms.Function::SendSmsAsync",
         "Policies": [
           "AWSLambdaFullAccess",
           "AmazonSSMReadOnlyAccess"
@@ -84,7 +84,7 @@
     "ReceiveSms": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "WakerUpper.Asp::WakerUpper.Asp.Function::ReceiveSmsAsync",
+        "Handler": "WakerUpper.Sms::WakerUpper.Sms.Function::ReceiveSmsAsync",
         "Policies": [
           "AWSLambdaFullAccess",
           "AmazonSSMFullAccess"
