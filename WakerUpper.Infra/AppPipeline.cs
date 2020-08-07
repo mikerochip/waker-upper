@@ -243,11 +243,7 @@ namespace WakerUpper.Infra
                                     { "ProjectName", buildProject.Name },
                                     {
                                         "EnvironmentVariables",
-                                        string.Join(' ',
-                                        "[",
-                                        "\"name\": \"ProjectPath\",",
-                                        "\"value\": \"WakerUpper.Sms\"",
-                                        "]")
+                                        "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.Sms\" } ]"
                                     },
                                 },
                                 OutputArtifacts = { "SmsBuildArtifact" },
@@ -266,11 +262,7 @@ namespace WakerUpper.Infra
                                     { "ProjectName", buildProject.Name },
                                     {
                                         "EnvironmentVariables",
-                                        string.Join(' ',
-                                        "[",
-                                        "\"name\": \"ProjectPath\",",
-                                        "\"value\": \"WakerUpper.Asp\"",
-                                        "]")
+                                        "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.Asp\" } ]"
                                     },
                                 },
                                 OutputArtifacts = { "AspBuildArtifact" },
