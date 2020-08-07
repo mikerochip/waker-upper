@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "Wakes yo ass up!",
+  "Description": "ASP app for the thing that wakes yo ass up!",
 
   "Parameters": {
     "TargetPhoneNumberParameter": {
