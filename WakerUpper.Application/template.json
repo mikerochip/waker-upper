@@ -16,105 +16,16 @@
       },
       "Environment": {
         "Variables": {
-          "TwilioAccountSidParameter": "/WakerUpper/TwilioAccountSid",
-          "TwilioAuthTokenParameter": "/WakerUpper/TwilioAuthToken",
           "AspKeysParameter": "/WakerUpper/AspKeys",
           "PhoneNumberOptionsParameterPath": "/WakerUpper/PhoneNumberOptions",
-          "SourcePhoneNumberParameter": { "Ref": "SourcePhoneNumberParameter" },
-          "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
-          "MessageParameter": { "Ref": "MessageParameter" }
+          "TargetPhoneNumberParameter": { "Fn::ImportValue": "WakerUpper-TargetPhoneNumberParameter-Name" },
+          "MessageParameter": { "Fn::ImportValue": "WakerUpper-MessageParameter-Name" }
         }
       }
     }
   },
 
   "Resources": {
-    "SourcePhoneNumberParameter": {
-      "Type": "AWS::SSM::Parameter",
-      "Properties": {
-        "Name": "/WakerUpper/SourcePhoneNumber",
-        "Type": "String",
-        "Value": "+15555550100",
-        "AllowedPattern": "^\\+[1-9]\\d{1,14}$"
-      }
-    },
-    "TargetPhoneNumberParameter": {
-      "Type": "AWS::SSM::Parameter",
-      "Properties": {
-        "Name": "/WakerUpper/TargetPhoneNumber",
-        "Type": "String",
-        "Value": "+15555550100",
-        "AllowedPattern": "^\\+[1-9]\\d{1,14}$"
-      }
-    },
-    "MessageParameter": {
-      "Type": "AWS::SSM::Parameter",
-      "Properties": {
-        "Name": "/WakerUpper/Message",
-        "Type": "String",
-        "Value": "Wake up!"
-      }
-    },
-
-    "SendSms": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "Handler": "WakerUpper.Application::WakerUpper.Application.Function::SendSmsAsync",
-        "Policies": [
-          "AWSLambdaFullAccess",
-          "AmazonSSMReadOnlyAccess"
-        ],
-        "Events": {
-          "ScheduledCall": {
-            "Type": "Schedule",
-            "Properties": {
-              "Schedule": "rate(1 minute)",
-              "Enabled": false
-            }
-          }
-        }
-      }
-    },
-    "SendSmsLogGroup": {
-      "Type": "AWS::Logs::LogGroup",
-      "Properties": {
-        "LogGroupName": { "Fn::Sub": "/aws/lambda/${SendSms}" },
-        "RetentionInDays": 1
-      }
-    },
-
-    "ReceiveSms": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "Handler": "WakerUpper.Application::WakerUpper.Application.Function::ReceiveSmsAsync",
-        "Policies": [
-          "AWSLambdaFullAccess",
-          "AmazonSSMFullAccess"
-        ],
-        "Environment": {
-          "Variables": {
-            "SendEventRuleName": { "Ref": "SendSmsScheduledCall" }
-          }
-        },
-        "Events": {
-          "ApiEvent": {
-            "Type": "Api",
-            "Properties": {
-              "Method": "POST",
-              "Path": "/receiveSms"
-            }
-          }
-        }
-      }
-    },
-    "ReceiveSmsLogGroup": {
-      "Type": "AWS::Logs::LogGroup",
-      "Properties": {
-        "LogGroupName": { "Fn::Sub": "/aws/lambda/${ReceiveSms}" },
-        "RetentionInDays": 1
-      }
-    },
-
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {

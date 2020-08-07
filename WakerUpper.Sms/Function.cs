@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -17,7 +18,7 @@ using Twilio.TwiML.Messaging;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace WakerUpper.Application
+namespace WakerUpper.Sms
 {
     public class Function
     {
@@ -25,7 +26,7 @@ namespace WakerUpper.Application
         private AmazonSimpleSystemsManagementClient SsmClient => _ssmClient.Value;
         private AmazonCloudWatchEventsClient CweClient => _cweClient.Value;
 
-        private string SendEventRuleName { get; } = Environment.GetEnvironmentVariable("SendEventRuleName");
+        private string SendEventRuleId { get; } = Environment.GetEnvironmentVariable("SendEventRuleId");
         private string TwilioAccountSidParameterName { get; } = Environment.GetEnvironmentVariable("TwilioAccountSidParameter");
         private string TwilioAuthTokenParameterName { get; } = Environment.GetEnvironmentVariable("TwilioAuthTokenParameter");
         private string SourcePhoneNumberParameterName { get; } = Environment.GetEnvironmentVariable("SourcePhoneNumberParameter");
@@ -66,7 +67,7 @@ namespace WakerUpper.Application
             string targetPhoneNumber = _parameterValues[TargetPhoneNumberParameterName];
             string message = _parameterValues[MessageParameterName];
 
-            AppLogger.LogJson(new
+            LogJson(new
             {
                 Event = "Request",
                 RequestId = context.AwsRequestId,
@@ -81,7 +82,7 @@ namespace WakerUpper.Application
                 to: new Twilio.Types.PhoneNumber(targetPhoneNumber)
             );
 
-            AppLogger.LogJson(new
+            LogJson(new
             {
                 Event = "Response",
                 RequestId = context.AwsRequestId,
@@ -94,7 +95,7 @@ namespace WakerUpper.Application
             Dictionary<string, string> payload = QueryHelpers.ParseQuery(proxyRequest.Body)
                 .ToDictionary(pair => pair.Key, pair=> pair.Value.FirstOrDefault());
 
-            AppLogger.LogJson(new
+            LogJson(new
             {
                 Event = "Request",
                 RequestId = context.AwsRequestId,
@@ -106,7 +107,7 @@ namespace WakerUpper.Application
 
             DisableRuleRequest request = new DisableRuleRequest
             {
-                Name = SendEventRuleName,
+                Name = SendEventRuleId,
             };
             await CweClient.DisableRuleAsync(request);
 
@@ -115,7 +116,7 @@ namespace WakerUpper.Application
             response.Append(message);
             string responseBody = response.ToString();
 
-            AppLogger.LogJson(new
+            LogJson(new
             {
                 Event = "Response",
                 RequestId = context.AwsRequestId,
@@ -135,6 +136,11 @@ namespace WakerUpper.Application
         #endregion
 
         #region Helpers
+        private void LogJson(object obj)
+        {
+            Console.WriteLine(JsonSerializer.Serialize(obj));
+        }
+        
         private async Task FillParameterValuesAsync(params string[] parameterNames)
         {
             GetParametersRequest request = new GetParametersRequest

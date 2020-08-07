@@ -1,0 +1,139 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "Wakes yo ass up!",
+
+  "Globals": {
+    "Function": {
+      "Runtime": "dotnetcore3.1",
+      "MemorySize": 512,
+      "Timeout": 30,
+      "Tracing": "PassThrough",
+      "CodeUri": "bin/Release/netcoreapp3.1/publish",
+      "AutoPublishAlias": "Live",
+      "DeploymentPreference": {
+        "Type": "AllAtOnce"
+      },
+      "Environment": {
+        "Variables": {
+          "TwilioAccountSidParameter": "/WakerUpper/TwilioAccountSid",
+          "TwilioAuthTokenParameter": "/WakerUpper/TwilioAuthToken",
+          "SourcePhoneNumberParameter": { "Ref": "SourcePhoneNumberParameter" },
+          "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
+          "MessageParameter": { "Ref": "MessageParameter" }
+        }
+      }
+    }
+  },
+
+  "Resources": {
+    "SourcePhoneNumberParameter": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/WakerUpper/SourcePhoneNumber",
+        "Type": "String",
+        "Value": "+15555550100",
+        "AllowedPattern": "^\\+[1-9]\\d{1,14}$"
+      }
+    },
+    "TargetPhoneNumberParameter": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/WakerUpper/TargetPhoneNumber",
+        "Type": "String",
+        "Value": "+15555550100",
+        "AllowedPattern": "^\\+[1-9]\\d{1,14}$"
+      }
+    },
+    "MessageParameter": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Name": "/WakerUpper/Message",
+        "Type": "String",
+        "Value": "Wake up!"
+      }
+    },
+
+    "SendSms": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "WakerUpper.Application::WakerUpper.Application.Function::SendSmsAsync",
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonSSMReadOnlyAccess"
+        ],
+        "Events": {
+          "ScheduledCall": {
+            "Type": "Schedule",
+            "Properties": {
+              "Schedule": "rate(1 minute)",
+              "Enabled": false
+            }
+          }
+        }
+      }
+    },
+    "SendSmsLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": { "Fn::Sub": "/aws/lambda/${SendSms}" },
+        "RetentionInDays": 1
+      }
+    },
+
+    "ReceiveSms": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "WakerUpper.Application::WakerUpper.Application.Function::ReceiveSmsAsync",
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonSSMFullAccess"
+        ],
+        "Environment": {
+          "Variables": {
+            "SendEventRuleId": { "Ref": "SendSmsScheduledCall" }
+          }
+        },
+        "Events": {
+          "ApiEvent": {
+            "Type": "Api",
+            "Properties": {
+              "Method": "POST",
+              "Path": "/receiveSms"
+            }
+          }
+        }
+      }
+    },
+    "ReceiveSmsLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": { "Fn::Sub": "/aws/lambda/${ReceiveSms}" },
+        "RetentionInDays": 1
+      }
+    }
+  },
+  
+  "Outputs": {
+    "SendEventRuleId": {
+      "Export": {
+        "Name": "WakerUpper-SendEventRule-Id"
+      },
+      "Value": { "Ref": "SendSmsScheduledCall" }
+    },
+    
+    "TargetPhoneNumberParameterName": {
+      "Export": {
+        "Name": "WakerUpper-TargetPhoneNumberParameter-Name"
+      },
+      "Value": { "Ref": "TargetPhoneNumberParameter" }
+    },
+    
+    "MessageParameterName": {
+      "Export": {
+        "Name": "WakerUpper-MessageParameter-Name"
+      },
+      "Value": { "Ref": "MessageParameter" }
+    }
+  }
+}
