@@ -297,6 +297,17 @@ namespace WakerUpper.Infra
                                     { "TemplatePath", "SmsBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
                                     { "RoleArn", cloudFormationRole.Arn },
+                                    {
+                                        "ParameterOverrides",
+                                        string.Join(' ',
+                                            "{",
+                                            Output.Format($"\"TwilioAccountSidParameter\": \"{Stack.TwilioAccountSidParameterName}\","),
+                                            Output.Format($"\"TwilioAuthTokenParameter\": \"{Stack.TwilioAuthTokenParameterName}\","),
+                                            Output.Format($"\"SourcePhoneNumberParameter\": \"{Stack.SourcePhoneNumberParameterName}\","),
+                                            Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
+                                            Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\","),
+                                            "}")
+                                    },
                                 },
                                 RunOrder = 1,
                             },
@@ -332,6 +343,14 @@ namespace WakerUpper.Infra
                                     { "TemplatePath", "AspBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
                                     { "RoleArn", cloudFormationRole.Arn },
+                                    {
+                                        "ParameterOverrides",
+                                        string.Join(' ',
+                                            "{",
+                                            Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
+                                            Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\","),
+                                            "}")
+                                    },
                                 },
                                 RunOrder = 3,
                             },

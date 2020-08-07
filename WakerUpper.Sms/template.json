@@ -2,6 +2,24 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "Wakes yo ass up!",
+  
+  "Parameters": {
+    "TwilioAccountSidParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    },
+    "TwilioAuthTokenParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    },
+    "SourcePhoneNumberParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    },
+    "TargetPhoneNumberParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    },
+    "MessageParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    }
+  },
 
   "Globals": {
     "Function": {
@@ -16,8 +34,8 @@
       },
       "Environment": {
         "Variables": {
-          "TwilioAccountSidParameter": "/WakerUpper/TwilioAccountSid",
-          "TwilioAuthTokenParameter": "/WakerUpper/TwilioAuthToken",
+          "TwilioAccountSidParameter": { "Ref": "TwilioAccountSidParameter" },
+          "TwilioAuthTokenParameter": { "Ref": "TwilioAuthTokenParameter" },
           "SourcePhoneNumberParameter": { "Ref": "SourcePhoneNumberParameter" },
           "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
           "MessageParameter": { "Ref": "MessageParameter" }
@@ -27,33 +45,6 @@
   },
 
   "Resources": {
-    "SourcePhoneNumberParameter": {
-      "Type": "AWS::SSM::Parameter",
-      "Properties": {
-        "Name": "/WakerUpper/SourcePhoneNumber",
-        "Type": "String",
-        "Value": "+15555550100",
-        "AllowedPattern": "^\\+[1-9]\\d{1,14}$"
-      }
-    },
-    "TargetPhoneNumberParameter": {
-      "Type": "AWS::SSM::Parameter",
-      "Properties": {
-        "Name": "/WakerUpper/TargetPhoneNumber",
-        "Type": "String",
-        "Value": "+15555550100",
-        "AllowedPattern": "^\\+[1-9]\\d{1,14}$"
-      }
-    },
-    "MessageParameter": {
-      "Type": "AWS::SSM::Parameter",
-      "Properties": {
-        "Name": "/WakerUpper/Message",
-        "Type": "String",
-        "Value": "Wake up!"
-      }
-    },
-
     "SendSms": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -120,20 +111,6 @@
         "Name": "WakerUpper-SendEventRule-Id"
       },
       "Value": { "Ref": "SendSmsScheduledCall" }
-    },
-    
-    "TargetPhoneNumberParameterName": {
-      "Export": {
-        "Name": "WakerUpper-TargetPhoneNumberParameter-Name"
-      },
-      "Value": { "Ref": "TargetPhoneNumberParameter" }
-    },
-    
-    "MessageParameterName": {
-      "Export": {
-        "Name": "WakerUpper-MessageParameter-Name"
-      },
-      "Value": { "Ref": "MessageParameter" }
     }
   }
 }

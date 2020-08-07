@@ -13,12 +13,8 @@ namespace WakerUpper.Asp
 {
     public class Startup
     {
-        #region Constants
-        private const string AspKeysEnvVar = "AspKeysParameter";
-        #endregion
-
         #region Properties
-        private static string AspKeysParameterName => Environment.GetEnvironmentVariable(AspKeysEnvVar);
+        private static string AspKeysParameterName => Environment.GetEnvironmentVariable("AspKeysParameter");
         
         private IConfiguration Configuration { get; }
         #endregion
@@ -45,11 +41,6 @@ namespace WakerUpper.Asp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddRazorPages();
-
-            services.AddDataProtection()
-                .PersistKeysToAWSSystemsManager(AspKeysParameterName);
-
             services.AddLogging(builder => builder
                 .ClearProviders()
                 .AddLambdaLogger(new LambdaLoggerOptions
@@ -63,6 +54,9 @@ namespace WakerUpper.Asp
             // to DI a plain ILogger, which we're doing because you can't instantiate a plain ILogger
             services.AddSingleton<ILogger>(provider => provider.GetService<ILogger<AppLogger>>());
             
+            services.AddRazorPages();
+            
+            services.AddDataProtection().PersistKeysToAWSSystemsManager(AspKeysParameterName);
             services.AddAWSService<IAmazonCloudWatchEvents>();
             services.AddAWSService<IAmazonSimpleSystemsManagement>();
         }

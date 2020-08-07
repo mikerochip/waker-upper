@@ -3,6 +3,15 @@
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "Wakes yo ass up!",
 
+  "Parameters": {
+    "TargetPhoneNumberParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    },
+    "MessageParameter": {
+      "Type": "AWS::SSM::Parameter::Name"
+    }
+  },
+
   "Globals": {
     "Function": {
       "Runtime": "dotnetcore3.1",
@@ -18,8 +27,8 @@
         "Variables": {
           "AspKeysParameter": "/WakerUpper/AspKeys",
           "PhoneNumberOptionsParameterPath": "/WakerUpper/PhoneNumberOptions",
-          "TargetPhoneNumberParameter": { "Fn::ImportValue": "WakerUpper-TargetPhoneNumberParameter-Name" },
-          "MessageParameter": { "Fn::ImportValue": "WakerUpper-MessageParameter-Name" }
+          "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
+          "MessageParameter": { "Ref": "MessageParameter" }
         }
       }
     }
@@ -37,7 +46,7 @@
         ],
         "Environment": {
           "Variables": {
-            "SendEventRuleName": { "Ref": "SendSmsScheduledCall" }
+            "SendEventRuleName": { "Fn::ImportValue": "WakerUpper-SendEventRule-Id" }
           }
         },
         "Events": {
