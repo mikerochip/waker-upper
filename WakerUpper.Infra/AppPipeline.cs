@@ -105,11 +105,6 @@ namespace WakerUpper.Infra
                     {
                         new ProjectEnvironmentEnvironmentVariableArgs
                         {
-                            Name = "ProjectPath",
-                            Value = "WakerUpper.Asp",
-                        },
-                        new ProjectEnvironmentEnvironmentVariableArgs
-                        {
                             Name = "Framework",
                             Value = "netcoreapp3.1",
                         },
@@ -237,6 +232,28 @@ namespace WakerUpper.Infra
                         {
                             new PipelineStageActionArgs
                             {
+                                Name = "BuildSms",
+                                Category = "Build",
+                                Owner = "AWS",
+                                Provider = "CodeBuild",
+                                Version = "1",
+                                InputArtifacts = { "SourceArtifact" },
+                                Configuration =
+                                {
+                                    { "ProjectName", buildProject.Name },
+                                    {
+                                        "EnvironmentVariables",
+                                        "[ " +
+                                        "\"name\": \"ProjectPath\", " +
+                                        "\"value\": \"WakerUpper.Sms\", " +
+                                        " ]"
+                                    },
+                                },
+                                OutputArtifacts = { "SmsBuildArtifact" },
+                                RunOrder = 1,
+                            },
+                            new PipelineStageActionArgs
+                            {
                                 Name = "Build",
                                 Category = "Build",
                                 Owner = "AWS",
@@ -246,8 +263,16 @@ namespace WakerUpper.Infra
                                 Configuration =
                                 {
                                     { "ProjectName", buildProject.Name },
+                                    {
+                                        "EnvironmentVariables",
+                                        "[ " +
+                                        "\"name\": \"ProjectPath\", " +
+                                        "\"value\": \"WakerUpper.Asp\", " +
+                                        " ]"
+                                    },
                                 },
-                                OutputArtifacts = { "BuildArtifact" },
+                                OutputArtifacts = { "AspBuildArtifact" },
+                                RunOrder = 1,
                             },
                         },
                     },
@@ -263,13 +288,13 @@ namespace WakerUpper.Infra
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
                                 Version = "1",
-                                InputArtifacts = { "BuildArtifact" },
+                                InputArtifacts = { "SmsBuildArtifact" },
                                 Configuration =
                                 {
                                     { "ActionMode", "CHANGE_SET_REPLACE" },
-                                    { "StackName", "WakerUpper" },
+                                    { "StackName", "WakerUpper-Sms" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
-                                    { "TemplatePath", "BuildArtifact::output-template.json" },
+                                    { "TemplatePath", "SmsBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
                                     { "RoleArn", cloudFormationRole.Arn },
                                 },
@@ -285,11 +310,46 @@ namespace WakerUpper.Infra
                                 Configuration =
                                 {
                                     { "ActionMode", "CHANGE_SET_EXECUTE" },
-                                    { "StackName", "WakerUpper" },
+                                    { "StackName", "WakerUpper-Sms" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
                                     { "RoleArn", cloudFormationRole.Arn },
                                 },
                                 RunOrder = 2,
+                            },
+                            new PipelineStageActionArgs
+                            {
+                                Name = "CreateChangeSet",
+                                Category = "Deploy",
+                                Owner = "AWS",
+                                Provider = "CloudFormation",
+                                Version = "1",
+                                InputArtifacts = { "AspBuildArtifact" },
+                                Configuration =
+                                {
+                                    { "ActionMode", "CHANGE_SET_REPLACE" },
+                                    { "StackName", "WakerUpper-Asp" },
+                                    { "ChangeSetName", "CodePipelineChangeSet" },
+                                    { "TemplatePath", "AspBuildArtifact::output-template.json" },
+                                    { "Capabilities", "CAPABILITY_NAMED_IAM" },
+                                    { "RoleArn", cloudFormationRole.Arn },
+                                },
+                                RunOrder = 3,
+                            },
+                            new PipelineStageActionArgs
+                            {
+                                Name = "ExecuteChangeSet",
+                                Category = "Deploy",
+                                Owner = "AWS",
+                                Provider = "CloudFormation",
+                                Version = "1",
+                                Configuration =
+                                {
+                                    { "ActionMode", "CHANGE_SET_EXECUTE" },
+                                    { "StackName", "WakerUpper-Asp" },
+                                    { "ChangeSetName", "CodePipelineChangeSet" },
+                                    { "RoleArn", cloudFormationRole.Arn },
+                                },
+                                RunOrder = 4,
                             },
                         },
                     },
