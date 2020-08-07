@@ -340,10 +340,10 @@ namespace WakerUpper.Infra
                                     {
                                         "ParameterOverrides",
                                         string.Join(' ',
-                                            "{",
-                                            Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
-                                            Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\""),
-                                            "}")
+                                        "{",
+                                        Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
+                                        Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\""),
+                                        "}")
                                     },
                                 },
                                 RunOrder = 3,
