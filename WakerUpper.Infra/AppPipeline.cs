@@ -243,10 +243,11 @@ namespace WakerUpper.Infra
                                     { "ProjectName", buildProject.Name },
                                     {
                                         "EnvironmentVariables",
-                                        "[ " +
-                                        "\"name\": \"ProjectPath\", " +
-                                        "\"value\": \"WakerUpper.Sms\", " +
-                                        " ]"
+                                        string.Join(' ',
+                                        "[",
+                                        "\"name\": \"ProjectPath\",",
+                                        "\"value\": \"WakerUpper.Sms\"",
+                                        "]")
                                     },
                                 },
                                 OutputArtifacts = { "SmsBuildArtifact" },
@@ -265,10 +266,11 @@ namespace WakerUpper.Infra
                                     { "ProjectName", buildProject.Name },
                                     {
                                         "EnvironmentVariables",
-                                        "[ " +
-                                        "\"name\": \"ProjectPath\", " +
-                                        "\"value\": \"WakerUpper.Asp\", " +
-                                        " ]"
+                                        string.Join(' ',
+                                        "[",
+                                        "\"name\": \"ProjectPath\",",
+                                        "\"value\": \"WakerUpper.Asp\"",
+                                        "]")
                                     },
                                 },
                                 OutputArtifacts = { "AspBuildArtifact" },
@@ -300,13 +302,13 @@ namespace WakerUpper.Infra
                                     {
                                         "ParameterOverrides",
                                         string.Join(' ',
-                                            "{",
-                                            Output.Format($"\"TwilioAccountSidParameter\": \"{Stack.TwilioAccountSidParameterName}\","),
-                                            Output.Format($"\"TwilioAuthTokenParameter\": \"{Stack.TwilioAuthTokenParameterName}\","),
-                                            Output.Format($"\"SourcePhoneNumberParameter\": \"{Stack.SourcePhoneNumberParameterName}\","),
-                                            Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
-                                            Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\","),
-                                            "}")
+                                        "{",
+                                        Output.Format($"\"TwilioAccountSidParameter\": \"{Stack.TwilioAccountSidParameterName}\","),
+                                        Output.Format($"\"TwilioAuthTokenParameter\": \"{Stack.TwilioAuthTokenParameterName}\","),
+                                        Output.Format($"\"SourcePhoneNumberParameter\": \"{Stack.SourcePhoneNumberParameterName}\","),
+                                        Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
+                                        Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\""),
+                                        "}")
                                     },
                                 },
                                 RunOrder = 1,
@@ -348,7 +350,7 @@ namespace WakerUpper.Infra
                                         string.Join(' ',
                                             "{",
                                             Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
-                                            Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\","),
+                                            Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\""),
                                             "}")
                                     },
                                 },
