@@ -341,7 +341,7 @@ namespace WakerUpper.Infra
                                         "ParameterOverrides",
                                         Output.Format(@$"{{
                                         ""TargetPhoneNumberParameter"": ""{Stack.TargetPhoneNumberParameterName}"",
-                                        ""MessageParameter"": ""{Stack.MessageParameterName}"",
+                                        ""MessageParameter"": ""{Stack.MessageParameterName}""
                                         }}")
                                     },
                                 },
