@@ -293,14 +293,14 @@ namespace WakerUpper.Infra
                                     { "RoleArn", cloudFormationRole.Arn },
                                     {
                                         "ParameterOverrides",
-                                        string.Join(' ',
-                                        "{",
-                                        Output.Format($"\"TwilioAccountSidParameter\": \"{Stack.TwilioAccountSidParameterName}\","),
-                                        Output.Format($"\"TwilioAuthTokenParameter\": \"{Stack.TwilioAuthTokenParameterName}\","),
-                                        Output.Format($"\"SourcePhoneNumberParameter\": \"{Stack.SourcePhoneNumberParameterName}\","),
-                                        Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
-                                        Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\""),
-                                        "}")
+                                        Output.Format(
+                                        @$"{{
+                                        ""TwilioAccountSidParameter"": ""{Stack.TwilioAccountSidParameterName}"", 
+                                        ""TwilioAuthTokenParameter"": ""{Stack.TwilioAuthTokenParameterName}"",
+                                        ""SourcePhoneNumberParameter"": ""{Stack.SourcePhoneNumberParameterName}"",
+                                        ""TargetPhoneNumberParameter"": ""{Stack.TargetPhoneNumberParameterName}"",
+                                        ""MessageParameter"": ""{Stack.MessageParameterName}""
+                                        }}")
                                     },
                                 },
                                 RunOrder = 1,
@@ -339,11 +339,10 @@ namespace WakerUpper.Infra
                                     { "RoleArn", cloudFormationRole.Arn },
                                     {
                                         "ParameterOverrides",
-                                        string.Join(' ',
-                                        "{",
-                                        Output.Format($"\"TargetPhoneNumberParameter\": \"{Stack.TargetPhoneNumberParameterName}\","),
-                                        Output.Format($"\"MessageParameter\": \"{Stack.MessageParameterName}\""),
-                                        "}")
+                                        Output.Format(@$"{{
+                                        ""TargetPhoneNumberParameter"": ""{Stack.TargetPhoneNumberParameterName}"",
+                                        ""MessageParameter"": ""{Stack.MessageParameterName}"",
+                                        }}")
                                     },
                                 },
                                 RunOrder = 3,
