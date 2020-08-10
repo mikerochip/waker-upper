@@ -23,7 +23,17 @@
 
   "Globals": {
     "Api": {
-      "OpenApiVersion": "3.0.1"
+      "OpenApiVersion": "3.0.1",
+      "EndpointConfiguration": "REGIONAL",
+      "Domain": {
+        "CertificateArn": { "Ref": "DomainCertificateArn" },
+        "DomainName": { "Ref": "DomainName" },
+        "Route53": {
+          "HostedZoneId": { "Ref": "DomainZoneId" }
+        },
+        "EndpointConfiguration": "REGIONAL",
+        "BasePath": [ "/app" ]
+      }
     },
     "Function": {
       "Runtime": "dotnetcore3.1",
@@ -47,13 +57,6 @@
   },
 
   "Resources": {
-    "Api": {
-      "Type": "AWS::Serverless::Api",
-      "Properties:": {
-        "StageName": "Wtf"
-      }
-    },
-    
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -72,7 +75,6 @@
           "ProxyResource": {
             "Type": "Api",
             "Properties": {
-              "RestApiId": { "Ref": "Api" },
               "Path": "/{proxy+}",
               "Method": "ANY"
             }
@@ -80,7 +82,6 @@
           "RootResource": {
             "Type": "Api",
             "Properties": {
-              "RestApiId": { "Ref": "Api" },
               "Path": "/",
               "Method": "ANY"
             }
