@@ -4,6 +4,15 @@
   "Description": "Wakes yo ass up!",
   
   "Parameters": {
+    "DomainZoneId": {
+      "Type": "String"
+    },
+    "DomainName": {
+      "Type": "String"
+    },
+    "DomainCertificateArn": {
+      "Type": "String"
+    },
     "TwilioAccountSidParameter": {
       "Type": "AWS::SSM::Parameter::Name"
     },
@@ -22,6 +31,19 @@
   },
 
   "Globals": {
+    "Api": {
+      "OpenApiVersion": "3.0.1",
+      "EndpointConfiguration": "REGIONAL",
+      "Domain": {
+        "CertificateArn": { "Ref": "DomainCertificateArn" },
+        "DomainName": { "Ref": "DomainName" },
+        "Route53": {
+          "HostedZoneId": { "Ref": "DomainZoneId" }
+        },
+        "EndpointConfiguration": "REGIONAL",
+        "BasePath": [ "/sms" ]
+      }
+    },
     "Function": {
       "Runtime": "dotnetcore3.1",
       "MemorySize": 512,
