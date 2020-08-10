@@ -50,8 +50,7 @@
     "Api": {
       "Type": "AWS::Serverless::Api",
       "Properties:": {
-        "StageName": "Prod",
-        "EndpointConfiguration": "REGIONAL"
+        "StageName": "prod"
       }
     },
     
