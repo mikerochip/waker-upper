@@ -22,6 +22,9 @@
   },
 
   "Globals": {
+    "Api": {
+      "OpenApiVersion": "3.0.1"
+    },
     "Function": {
       "Runtime": "dotnetcore3.1",
       "MemorySize": 512,
@@ -44,11 +47,10 @@
   },
 
   "Resources": {
-    "Api": {
+    "ApiGatewayApi": {
       "Type": "AWS::Serverless::Api",
       "Properties:": {
         "StageName": "Prod",
-        "OpenApiVersion": "3.0.1",
         "EndpointConfiguration": "REGIONAL",
         "Domain": {
           "CertificateArn": { "Ref": "DomainCertificateArn" },
