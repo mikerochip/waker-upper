@@ -42,6 +42,16 @@
   },
 
   "Resources": {
+    "BasePathMapping": {
+      "Type": "AWS::ApiGateway::BasePathMapping",
+      "Properties": {
+        "BasePath": "app",
+        "DomainName": { "Ref": "DomainName" },
+        "RestApiId": { "Ref": "ServerlessRestApi" },
+        "Stage": { "Ref": "ServerlessRestApiProdStage" }
+      }
+    },
+    
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
