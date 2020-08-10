@@ -48,6 +48,8 @@
       "Type": "AWS::Serverless::Api",
       "Properties:": {
         "StageName": "Prod",
+        "OpenApiVersion": "3.0.1",
+        "EndpointConfiguration": "REGIONAL",
         "Domain": {
           "CertificateArn": { "Ref": "DomainCertificateArn" },
           "DomainName": { "Ref": "DomainName" },
