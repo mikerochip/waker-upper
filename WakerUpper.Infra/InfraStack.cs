@@ -19,10 +19,11 @@ namespace WakerUpper.Infra
         
         public InfraStack()
         {
-            SsmParameters parameters = new SsmParameters(this);
-            parameters.CreateResources();
-            AppPipeline pipeline = new AppPipeline(this);
-            pipeline.CreateResources();
+            SsmResources ssmResources = new SsmResources(this);
+            ssmResources.CreateResources();
+            
+            PipelineResources pipelineResources = new PipelineResources(this);
+            pipelineResources.CreateResources();
         }
     }
 }

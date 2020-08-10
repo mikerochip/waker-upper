@@ -4,7 +4,7 @@ using Config = Pulumi.Config;
 
 namespace WakerUpper.Infra
 {
-    internal class SsmParameters
+    internal class SsmResources
     {
         #region Constants
         private const string FakePhoneNumber = "+15555550100";
@@ -17,20 +17,20 @@ namespace WakerUpper.Infra
         #endregion
         
         #region Initialization
-        public SsmParameters(InfraStack stack)
+        public SsmResources(InfraStack stack)
         {
             Stack = stack;
         }
 
         public void CreateResources()
         {
-            CreatePhoneResources();
-            CreateTwilioResources();
+            CreatePhoneParameters();
+            CreateTwilioParameters();
         }
         #endregion
 
         #region Phone
-        private void CreatePhoneResources()
+        private void CreatePhoneParameters()
         {
             Parameter sourcePhoneNumber = new Parameter("SourcePhoneNumber", new ParameterArgs
             {
@@ -61,7 +61,7 @@ namespace WakerUpper.Infra
         #endregion
         
         #region Twilio
-        private void CreateTwilioResources()
+        private void CreateTwilioParameters()
         {
             Parameter accountSid = new Parameter("TwilioAccountSid", new ParameterArgs
             {

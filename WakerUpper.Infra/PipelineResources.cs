@@ -17,7 +17,7 @@ using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
-    internal class AppPipeline
+    internal class PipelineResources
     {
         #region Properties
         private InfraStack Stack { get; }
@@ -26,7 +26,7 @@ namespace WakerUpper.Infra
         #endregion
         
         #region Initialization
-        public AppPipeline(InfraStack stack)
+        public PipelineResources(InfraStack stack)
         {
             Stack = stack;
         }
