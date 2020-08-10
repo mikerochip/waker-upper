@@ -340,6 +340,9 @@ namespace WakerUpper.Infra
                                     {
                                         "ParameterOverrides",
                                         Output.Format(@$"{{
+                                        ""DomainZoneId"": ""{Config.Require("domainZoneId")}"",
+                                        ""DomainName"": ""{Stack.DomainName}"",
+                                        ""DomainCertificateArn"": ""{Stack.DomainCertificateArn}"",
                                         ""TargetPhoneNumberParameter"": ""{Stack.TargetPhoneNumberParameterName}"",
                                         ""MessageParameter"": ""{Stack.MessageParameterName}""
                                         }}")
@@ -399,11 +402,9 @@ namespace WakerUpper.Infra
 
         private void CreateRepoWebhook(PipelineWebhook pipelineWebhook)
         {
-            string repo = Config.Require("githubRepo");
-            
             RepositoryWebhook repoWebhook = new RepositoryWebhook($"Pulumi-CodePipeline", new RepositoryWebhookArgs
             {
-                Repository = repo,
+                Repository = Config.Require("githubRepo"),
                 Events = "push",
                 Configuration = new RepositoryWebhookConfigurationArgs
                 {

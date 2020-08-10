@@ -4,6 +4,15 @@
   "Description": "ASP app for the thing that wakes yo ass up!",
 
   "Parameters": {
+    "DomainZoneId": {
+      "Type": "String"
+    },
+    "DomainName": {
+      "Type": "String"
+    },
+    "DomainCertificateArn": {
+      "Type": "String"
+    },
     "TargetPhoneNumberParameter": {
       "Type": "AWS::SSM::Parameter::Name"
     },
@@ -35,6 +44,22 @@
   },
 
   "Resources": {
+    "Api": {
+      "Type": "AWS::Serverless::Api",
+      "Properties:": {
+        "StageName": "Prod",
+        "Domain": {
+          "CertificateArn": { "Ref": "DomainCertificateArn" },
+          "DomainName": { "Ref": "DomainName" },
+          "Route53": {
+            "HostedZoneId": { "Ref": "DomainZoneId" }
+          },
+          "EndpointConfiguration": "REGIONAL",
+          "BasePath": [ "/app" ]
+        }
+      }
+    },
+    
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -53,6 +78,7 @@
           "ProxyResource": {
             "Type": "Api",
             "Properties": {
+              "RestApiId": { "Ref": "Api" },
               "Path": "/{proxy+}",
               "Method": "ANY"
             }
@@ -60,6 +86,7 @@
           "RootResource": {
             "Type": "Api",
             "Properties": {
+              "RestApiId": { "Ref": "Api" },
               "Path": "/",
               "Method": "ANY"
             }
