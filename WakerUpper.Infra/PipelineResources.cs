@@ -295,9 +295,7 @@ namespace WakerUpper.Infra
                                         "ParameterOverrides",
                                         Output.Format(
                                         @$"{{
-                                        ""DomainZoneId"": ""{Config.Require("domainZoneId")}"",
                                         ""DomainName"": ""{Stack.DomainName}"",
-                                        ""DomainCertificateArn"": ""{Stack.DomainCertificateArn}"",
                                         ""TwilioAccountSidParameter"": ""{Stack.TwilioAccountSidParameterName}"", 
                                         ""TwilioAuthTokenParameter"": ""{Stack.TwilioAuthTokenParameterName}"",
                                         ""SourcePhoneNumberParameter"": ""{Stack.SourcePhoneNumberParameterName}"",
@@ -343,9 +341,7 @@ namespace WakerUpper.Infra
                                     {
                                         "ParameterOverrides",
                                         Output.Format(@$"{{
-                                        ""DomainZoneId"": ""{Config.Require("domainZoneId")}"",
                                         ""DomainName"": ""{Stack.DomainName}"",
-                                        ""DomainCertificateArn"": ""{Stack.DomainCertificateArn}"",
                                         ""TargetPhoneNumberParameter"": ""{Stack.TargetPhoneNumberParameterName}"",
                                         ""MessageParameter"": ""{Stack.MessageParameterName}""
                                         }}")

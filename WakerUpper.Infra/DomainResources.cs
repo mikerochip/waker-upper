@@ -1,14 +1,21 @@
 using Pulumi;
 using Pulumi.Aws.Acm;
+using Pulumi.Aws.Acm.Outputs;
+using Pulumi.Aws.ApiGateway;
+using Pulumi.Aws.ApiGateway.Inputs;
 using Pulumi.Aws.Route53;
 using System.Linq;
-using Pulumi.Aws.Acm.Outputs;
+
 using Config = Pulumi.Config;
 
 namespace WakerUpper.Infra
 {
     internal class DomainResources
     {
+        #region Constants
+        private const string Subdomain = "wakerupper";
+        #endregion
+        
         #region Properties
         private InfraStack Stack { get; }
         private Config Config { get; } = new Config();
@@ -22,18 +29,20 @@ namespace WakerUpper.Infra
 
         public void CreateResources()
         {
-            CreateCertificate();
+            Zone zone = Zone.Get("DomainZone", Config.Require("domainZoneId"));
+            Stack.DomainName = Output.Format($"{Subdomain}.{zone.Name}");
+            
+            Certificate certificate = CreateCertificate(zone);
+            CreateDomain(certificate);
         }
         #endregion
         
         #region Certificate
-        private void CreateCertificate()
+        private Certificate CreateCertificate(Zone zone)
         {
-            Zone zone = Zone.Get("DomainZone", Config.Require("domainZoneId"));
-            
             Certificate certificate = new Certificate("WakerUpper", new CertificateArgs
             {
-                DomainName = Output.Format($"wakerupper.{zone.Name}"),
+                DomainName = Stack.DomainName!,
                 ValidationMethod = "DNS",
             });
             Output<CertificateDomainValidationOption> validationOption = certificate.DomainValidationOptions.Apply(
@@ -62,6 +71,24 @@ namespace WakerUpper.Infra
 
             Stack.DomainName = certificate.DomainName;
             Stack.DomainCertificateArn = validation.CertificateArn;
+            
+            return certificate;
+        }
+        #endregion
+        
+        #region Domain
+        private void CreateDomain(Certificate certificate)
+        {
+            DomainName domainName = new DomainName("WakerUpper", new DomainNameArgs
+            {
+                Domain = Stack.DomainName!,
+                RegionalCertificateArn = certificate.Arn,
+                EndpointConfiguration = new DomainNameEndpointConfigurationArgs
+                {
+                    Types = "REGIONAL",
+                },
+                SecurityPolicy = "TLS_1_2",
+            });
         }
         #endregion
     }
