@@ -47,20 +47,11 @@
   },
 
   "Resources": {
-    "ApiGatewayApi": {
+    "Api": {
       "Type": "AWS::Serverless::Api",
       "Properties:": {
         "StageName": "Prod",
-        "EndpointConfiguration": "REGIONAL",
-        "Domain": {
-          "CertificateArn": { "Ref": "DomainCertificateArn" },
-          "DomainName": { "Ref": "DomainName" },
-          "Route53": {
-            "HostedZoneId": { "Ref": "DomainZoneId" }
-          },
-          "EndpointConfiguration": "REGIONAL",
-          "BasePath": [ "/app" ]
-        }
+        "EndpointConfiguration": "REGIONAL"
       }
     },
     
@@ -82,7 +73,7 @@
           "ProxyResource": {
             "Type": "Api",
             "Properties": {
-              "RestApiId": { "Ref": "ApiGatewayApi" },
+              "RestApiId": { "Ref": "Api" },
               "Path": "/{proxy+}",
               "Method": "ANY"
             }
@@ -90,7 +81,7 @@
           "RootResource": {
             "Type": "Api",
             "Properties": {
-              "RestApiId": { "Ref": "ApiGatewayApi" },
+              "RestApiId": { "Ref": "Api" },
               "Path": "/",
               "Method": "ANY"
             }
