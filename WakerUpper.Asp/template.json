@@ -82,7 +82,7 @@
           "ProxyResource": {
             "Type": "Api",
             "Properties": {
-              "RestApiId": { "Ref": "Api" },
+              "RestApiId": { "Ref": "ApiGatewayApi" },
               "Path": "/{proxy+}",
               "Method": "ANY"
             }
@@ -90,7 +90,7 @@
           "RootResource": {
             "Type": "Api",
             "Properties": {
-              "RestApiId": { "Ref": "Api" },
+              "RestApiId": { "Ref": "ApiGatewayApi" },
               "Path": "/",
               "Method": "ANY"
             }
