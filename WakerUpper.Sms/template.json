@@ -52,16 +52,6 @@
   },
 
   "Resources": {
-    "BasePathMapping": {
-      "Type": "AWS::ApiGateway::BasePathMapping",
-      "Properties": {
-        "BasePath": "sms",
-        "DomainName": { "Ref": "DomainName" },
-        "RestApiId": { "Ref": "ServerlessRestApi" },
-        "Stage": { "Ref": "ServerlessRestApiProdStage" }
-      }
-    },
-    
     "SendSms": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
