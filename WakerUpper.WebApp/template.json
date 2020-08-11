@@ -7,17 +7,14 @@
     "DomainName": {
       "Type": "String"
     },
+    "DomainBasePath": {
+      "Type": "String"
+    },
     "TargetPhoneNumberParameter": {
       "Type": "AWS::SSM::Parameter::Name"
     },
     "MessageParameter": {
       "Type": "AWS::SSM::Parameter::Name"
-    }
-  },
-
-  "Mappings": {
-    "DomainMap": {
-      "BasePath": { "Name": "app" }
     }
   },
 
@@ -43,7 +40,7 @@
     "BasePathMapping": {
       "Type": "AWS::ApiGateway::BasePathMapping",
       "Properties": {
-        "BasePath": { "Fn::FindInMap": [ "DomainMap", "BasePath", "Name" ] },
+        "BasePath": { "Ref": "DomainBasePath" },
         "DomainName": { "Ref": "DomainName" },
         "RestApiId": { "Ref": "ServerlessRestApi" },
         "Stage": { "Ref": "ServerlessRestApiProdStage" }
@@ -61,7 +58,7 @@
         ],
         "Environment": {
           "Variables": {
-            "BasePath": { "Fn::FindInMap": [ "DomainMap", "BasePath", "Name" ] },
+            "BasePath": { "Ref": "DomainBasePath" },
             "AspKeysParameter": "/WakerUpper/AspKeys",
             "PhoneNumberOptionsParameterPath": "/WakerUpper/PhoneNumberOptions",
             "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },

@@ -19,6 +19,11 @@ namespace WakerUpper.Infra
 {
     internal class PipelineResources
     {
+        #region Constants
+        private const string ApiDomainBasePath = "api";
+        private const string WebAppDomainBasePath = "app";
+        #endregion
+        
         #region Properties
         private InfraStack Stack { get; }
         private Config Config { get; } = new Config();
@@ -296,6 +301,7 @@ namespace WakerUpper.Infra
                                         Output.Format(
                                         @$"{{
                                         ""DomainName"": ""{Stack.DomainName}"",
+                                        ""DomainBasePath"": ""{ApiDomainBasePath}"",
                                         ""TwilioAccountSidParameter"": ""{Stack.TwilioAccountSidParameterName}"", 
                                         ""TwilioAuthTokenParameter"": ""{Stack.TwilioAuthTokenParameterName}"",
                                         ""SourcePhoneNumberParameter"": ""{Stack.SourcePhoneNumberParameterName}"",
@@ -342,6 +348,7 @@ namespace WakerUpper.Infra
                                         "ParameterOverrides",
                                         Output.Format(@$"{{
                                         ""DomainName"": ""{Stack.DomainName}"",
+                                        ""DomainBasePath"": ""{WebAppDomainBasePath}"",
                                         ""TargetPhoneNumberParameter"": ""{Stack.TargetPhoneNumberParameterName}"",
                                         ""MessageParameter"": ""{Stack.MessageParameterName}""
                                         }}")
