@@ -237,7 +237,7 @@ namespace WakerUpper.Infra
                         {
                             new PipelineStageActionArgs
                             {
-                                Name = "BuildSms",
+                                Name = "Api-Build",
                                 Category = "Build",
                                 Owner = "AWS",
                                 Provider = "CodeBuild",
@@ -251,12 +251,12 @@ namespace WakerUpper.Infra
                                         "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.Api\" } ]"
                                     },
                                 },
-                                OutputArtifacts = { "SmsBuildArtifact" },
+                                OutputArtifacts = { "ApiBuildArtifact" },
                                 RunOrder = 1,
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "BuildAsp",
+                                Name = "WebApp-Build",
                                 Category = "Build",
                                 Owner = "AWS",
                                 Provider = "CodeBuild",
@@ -270,7 +270,7 @@ namespace WakerUpper.Infra
                                         "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.WebApp\" } ]"
                                     },
                                 },
-                                OutputArtifacts = { "AspBuildArtifact" },
+                                OutputArtifacts = { "WebAppBuildArtifact" },
                                 RunOrder = 1,
                             },
                         },
@@ -282,16 +282,16 @@ namespace WakerUpper.Infra
                         {
                             new PipelineStageActionArgs
                             {
-                                Name = "SmsCreateChangeSet",
+                                Name = "Api-CreateChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
                                 Version = "1",
-                                InputArtifacts = { "SmsBuildArtifact" },
+                                InputArtifacts = { "ApiBuildArtifact" },
                                 Configuration =
                                 {
                                     { "ActionMode", "CHANGE_SET_REPLACE" },
-                                    { "StackName", "WakerUpper-Sms" },
+                                    { "StackName", "WakerUpper-Api" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
                                     { "TemplatePath", "SmsBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
@@ -314,7 +314,7 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "SmsExecuteChangeSet",
+                                Name = "Api-ExecuteChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
@@ -322,7 +322,7 @@ namespace WakerUpper.Infra
                                 Configuration =
                                 {
                                     { "ActionMode", "CHANGE_SET_EXECUTE" },
-                                    { "StackName", "WakerUpper-Sms" },
+                                    { "StackName", "WakerUpper-Api" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
                                     { "RoleArn", cloudFormationRole.Arn },
                                 },
@@ -330,16 +330,16 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "AspCreateChangeSet",
+                                Name = "WebApp-CreateChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
                                 Version = "1",
-                                InputArtifacts = { "AspBuildArtifact" },
+                                InputArtifacts = { "WebAppBuildArtifact" },
                                 Configuration =
                                 {
                                     { "ActionMode", "CHANGE_SET_REPLACE" },
-                                    { "StackName", "WakerUpper-Asp" },
+                                    { "StackName", "WakerUpper-WebApp" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
                                     { "TemplatePath", "AspBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
@@ -358,7 +358,7 @@ namespace WakerUpper.Infra
                             },
                             new PipelineStageActionArgs
                             {
-                                Name = "AspExecuteChangeSet",
+                                Name = "WebApp-ExecuteChangeSet",
                                 Category = "Deploy",
                                 Owner = "AWS",
                                 Provider = "CloudFormation",
@@ -366,7 +366,7 @@ namespace WakerUpper.Infra
                                 Configuration =
                                 {
                                     { "ActionMode", "CHANGE_SET_EXECUTE" },
-                                    { "StackName", "WakerUpper-Asp" },
+                                    { "StackName", "WakerUpper-WebApp" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
                                     { "RoleArn", cloudFormationRole.Arn },
                                 },
