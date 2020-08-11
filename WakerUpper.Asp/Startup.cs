@@ -77,6 +77,7 @@ namespace WakerUpper.Asp
             app.UseCookiePolicy();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UsePathBase(new PathString("/app"));
             app.UseRouting();
             //app.UseAuthentication();
             //app.UseAuthorization();
