@@ -33,7 +33,7 @@ namespace WakerUpper.Infra
             Stack.DomainName = Output.Format($"{Subdomain}.{zone.Name}");
             
             Certificate certificate = CreateCertificate(zone);
-            CreateDomain(certificate);
+            CreateDomain(zone, certificate);
         }
         #endregion
         
@@ -48,7 +48,7 @@ namespace WakerUpper.Infra
             Output<CertificateDomainValidationOption> validationOption = certificate.DomainValidationOptions.Apply(
                 options => options.First());
             
-            Record record = new Record("WakerUpper", new RecordArgs
+            Record record = new Record("WakerUpperCert", new RecordArgs
             {
                 Name = validationOption.Apply(o => o.ResourceRecordName!),
                 Type = validationOption.Apply(o => o.ResourceRecordType!),
@@ -70,14 +70,14 @@ namespace WakerUpper.Infra
             });
 
             Stack.DomainName = certificate.DomainName;
-            Stack.DomainCertificateArn = validation.CertificateArn;
+            Stack.DomainCertificateArn = certificate.Arn;
             
             return certificate;
         }
         #endregion
         
         #region Domain
-        private void CreateDomain(Certificate certificate)
+        private void CreateDomain(Zone zone, Certificate certificate)
         {
             DomainName domainName = new DomainName("WakerUpper", new DomainNameArgs
             {
@@ -88,6 +88,18 @@ namespace WakerUpper.Infra
                     Types = "REGIONAL",
                 },
                 SecurityPolicy = "TLS_1_2",
+            });
+            
+            Record record = new Record("WakerUpperCname", new RecordArgs
+            {
+                Name = domainName.Domain,
+                Type = "CNAME",
+                ZoneId = zone.ZoneId,
+                Records = new InputList<string>
+                {
+                    domainName.RegionalDomainName,
+                },
+                Ttl = 15 * 60,
             });
         }
         #endregion
