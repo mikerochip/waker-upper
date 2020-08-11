@@ -293,7 +293,7 @@ namespace WakerUpper.Infra
                                     { "ActionMode", "CHANGE_SET_REPLACE" },
                                     { "StackName", "WakerUpper-Api" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
-                                    { "TemplatePath", "SmsBuildArtifact::output-template.json" },
+                                    { "TemplatePath", "ApiBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
                                     { "RoleArn", cloudFormationRole.Arn },
                                     {
@@ -341,7 +341,7 @@ namespace WakerUpper.Infra
                                     { "ActionMode", "CHANGE_SET_REPLACE" },
                                     { "StackName", "WakerUpper-WebApp" },
                                     { "ChangeSetName", "CodePipelineChangeSet" },
-                                    { "TemplatePath", "AspBuildArtifact::output-template.json" },
+                                    { "TemplatePath", "WebAppBuildArtifact::output-template.json" },
                                     { "Capabilities", "CAPABILITY_NAMED_IAM" },
                                     { "RoleArn", cloudFormationRole.Arn },
                                     {
