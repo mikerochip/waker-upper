@@ -26,7 +26,7 @@ namespace WakerUpper.Asp
                 RequestId = lambdaContext.AwsRequestId,
                 RequestPath = lambdaRequest.Path,
                 RequestParameters = lambdaRequest.PathParameters,
-                Method = lambdaRequest.HttpMethod,,
+                Method = lambdaRequest.HttpMethod,
             });
         }
 
