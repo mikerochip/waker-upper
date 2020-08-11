@@ -24,6 +24,9 @@ namespace WakerUpper.Asp
             {
                 Event = "Request",
                 RequestId = lambdaContext.AwsRequestId,
+                RequestPath = lambdaRequest.Path,
+                RequestParameters = lambdaRequest.PathParameters,
+                Method = lambdaRequest.HttpMethod,,
             });
         }
 
@@ -38,6 +41,7 @@ namespace WakerUpper.Asp
             {
                 Event = "Response",
                 RequestId = lambdaContext.AwsRequestId,
+                StatusCode = lambdaResponse.StatusCode,
             });
         }
     }
