@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
 
-namespace WakerUpper.Asp.Pages
+namespace WakerUpper.WebApp.Pages
 {
     public class ErrorModel : PageModel
     {

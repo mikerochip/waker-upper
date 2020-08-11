@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WakerUpper.Asp.Pages
+namespace WakerUpper.WebApp.Pages
 {
     public class OldIndexModel : PageModel
     {

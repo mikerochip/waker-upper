@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
 
-namespace WakerUpper.Asp
+namespace WakerUpper.WebApp
 {
     public class Program
     {

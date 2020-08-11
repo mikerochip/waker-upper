@@ -262,7 +262,7 @@ namespace WakerUpper.Infra
                                     { "ProjectName", buildProject.Name },
                                     {
                                         "EnvironmentVariables",
-                                        "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.Asp\" } ]"
+                                        "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.WebApp\" } ]"
                                     },
                                 },
                                 OutputArtifacts = { "AspBuildArtifact" },

@@ -53,7 +53,7 @@
     "AspNetCoreFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "WakerUpper.Asp::WakerUpper.Asp.LambdaAspEntryPoint::FunctionHandlerAsync",
+        "Handler": "WakerUpper.WebApp::WakerUpper.WebApp.LambdaAspEntryPoint::FunctionHandlerAsync",
         "Policies": [
           "AWSLambdaFullAccess",
           "AmazonSSMFullAccess",
