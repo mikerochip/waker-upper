@@ -243,7 +243,7 @@ namespace WakerUpper.Infra
                                     { "ProjectName", buildProject.Name },
                                     {
                                         "EnvironmentVariables",
-                                        "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.Sms\" } ]"
+                                        "[ { \"name\": \"ProjectPath\", \"value\": \"WakerUpper.Api\" } ]"
                                     },
                                 },
                                 OutputArtifacts = { "SmsBuildArtifact" },

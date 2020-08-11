@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.WebApp", "WakerU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Infra", "WakerUpper.Infra\WakerUpper.Infra.csproj", "{FD8184C3-3A7F-4643-B990-351BDA4280FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Sms", "WakerUpper.Sms\WakerUpper.Sms.csproj", "{831645CD-EFB6-4C24-B0C7-A2A6BF26520F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakerUpper.Api", "WakerUpper.Api\WakerUpper.Api.csproj", "{831645CD-EFB6-4C24-B0C7-A2A6BF26520F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
