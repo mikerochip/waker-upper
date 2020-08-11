@@ -14,6 +14,7 @@ namespace WakerUpper.Asp
     public class Startup
     {
         #region Properties
+        private static string BasePath => Environment.GetEnvironmentVariable("BasePath");
         private static string AspKeysParameterName => Environment.GetEnvironmentVariable("AspKeysParameter");
         
         private IConfiguration Configuration { get; }
@@ -77,7 +78,7 @@ namespace WakerUpper.Asp
             app.UseCookiePolicy();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UsePathBase(new PathString("/app"));
+            app.UsePathBase(new PathString($"/{BasePath}"));
             app.UseRouting();
             //app.UseAuthentication();
             //app.UseAuthorization();

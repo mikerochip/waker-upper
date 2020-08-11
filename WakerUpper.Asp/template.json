@@ -15,6 +15,12 @@
     }
   },
 
+  "Mappings": {
+    "DomainMap": {
+      "BasePath": { "Name": "app" }
+    }
+  },
+
   "Globals": {
     "Api": {
       "OpenApiVersion": "3.0.1",
@@ -29,14 +35,6 @@
       "AutoPublishAlias": "Live",
       "DeploymentPreference": {
         "Type": "AllAtOnce"
-      },
-      "Environment": {
-        "Variables": {
-          "AspKeysParameter": "/WakerUpper/AspKeys",
-          "PhoneNumberOptionsParameterPath": "/WakerUpper/PhoneNumberOptions",
-          "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
-          "MessageParameter": { "Ref": "MessageParameter" }
-        }
       }
     }
   },
@@ -45,7 +43,7 @@
     "BasePathMapping": {
       "Type": "AWS::ApiGateway::BasePathMapping",
       "Properties": {
-        "BasePath": "app",
+        "BasePath": { "Fn::FindInMap": [ "DomainMap", "BasePath", "Name" ] },
         "DomainName": { "Ref": "DomainName" },
         "RestApiId": { "Ref": "ServerlessRestApi" },
         "Stage": { "Ref": "ServerlessRestApiProdStage" }
@@ -63,6 +61,11 @@
         ],
         "Environment": {
           "Variables": {
+            "BasePath": { "Fn::FindInMap": [ "DomainMap", "BasePath", "Name" ] },
+            "AspKeysParameter": "/WakerUpper/AspKeys",
+            "PhoneNumberOptionsParameterPath": "/WakerUpper/PhoneNumberOptions",
+            "TargetPhoneNumberParameter": { "Ref": "TargetPhoneNumberParameter" },
+            "MessageParameter": { "Ref": "MessageParameter" },
             "SendEventRuleName": { "Fn::ImportValue": "WakerUpper-SendEventRule-Id" }
           }
         },
