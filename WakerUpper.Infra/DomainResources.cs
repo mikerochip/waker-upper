@@ -32,15 +32,15 @@ namespace WakerUpper.Infra
             Zone zone = Zone.Get("DomainZone", Config.Require("domainZoneId"));
             Stack.DomainName = Output.Format($"{Subdomain}.{zone.Name}");
             
-            Certificate certificate = CreateCertificate(zone);
-            CreateDomain(zone, certificate);
+            CreateCertificate(zone);
+            CreateDomain(zone);
         }
         #endregion
         
         #region Certificate
-        private Certificate CreateCertificate(Zone zone)
+        private void CreateCertificate(Zone zone)
         {
-            Certificate certificate = new Certificate("WakerUpper", new CertificateArgs
+            Certificate certificate = new Certificate("DomainCert", new CertificateArgs
             {
                 DomainName = Stack.DomainName!,
                 ValidationMethod = "DNS",
@@ -48,7 +48,7 @@ namespace WakerUpper.Infra
             Output<CertificateDomainValidationOption> validationOption = certificate.DomainValidationOptions.Apply(
                 options => options.First());
             
-            Record record = new Record("WakerUpperCert", new RecordArgs
+            Record record = new Record("CertRecord", new RecordArgs
             {
                 Name = validationOption.Apply(o => o.ResourceRecordName!),
                 Type = validationOption.Apply(o => o.ResourceRecordType!),
@@ -60,7 +60,7 @@ namespace WakerUpper.Infra
                 Ttl = 60,
             });
             
-            CertificateValidation validation = new CertificateValidation("WakerUpper", new CertificateValidationArgs
+            CertificateValidation validation = new CertificateValidation("CertValidation", new CertificateValidationArgs
             {
                 CertificateArn = certificate.Arn,
                 ValidationRecordFqdns = new InputList<string>
@@ -70,19 +70,17 @@ namespace WakerUpper.Infra
             });
 
             Stack.DomainName = certificate.DomainName;
-            Stack.DomainCertificateArn = certificate.Arn;
-            
-            return certificate;
+            Stack.DomainCertificateArn = validation.CertificateArn;
         }
         #endregion
         
         #region Domain
-        private void CreateDomain(Zone zone, Certificate certificate)
+        private void CreateDomain(Zone zone)
         {
-            DomainName domainName = new DomainName("WakerUpper", new DomainNameArgs
+            DomainName domainName = new DomainName("DomainName", new DomainNameArgs
             {
                 Domain = Stack.DomainName!,
-                RegionalCertificateArn = certificate.Arn,
+                RegionalCertificateArn = Stack.DomainCertificateArn!,
                 EndpointConfiguration = new DomainNameEndpointConfigurationArgs
                 {
                     Types = "REGIONAL",
@@ -90,7 +88,7 @@ namespace WakerUpper.Infra
                 SecurityPolicy = "TLS_1_2",
             });
             
-            Record record = new Record("WakerUpperCname", new RecordArgs
+            Record record = new Record("CnameRecord", new RecordArgs
             {
                 Name = domainName.Domain,
                 Type = "CNAME",
