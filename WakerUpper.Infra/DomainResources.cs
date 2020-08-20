@@ -110,6 +110,10 @@ namespace WakerUpper.Infra
                         domainName.RegionalDomainName,
                     },
                     Ttl = 15 * 60,
+                },
+                new CustomResourceOptions
+                {
+                    DependsOn = cert,
                 });
         }
         #endregion
