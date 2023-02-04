@@ -8,8 +8,6 @@ using Pulumi.Aws.CodePipeline;
 using Pulumi.Aws.CodePipeline.Inputs;
 using Pulumi.Aws.S3;
 using Pulumi.Aws.S3.Inputs;
-using Pulumi.Github;
-using Pulumi.Github.Inputs;
 
 using Config = Pulumi.Config;
 using PipelineWebhook = Pulumi.Aws.CodePipeline.Webhook;
@@ -27,7 +25,6 @@ namespace WakerUpper.Infra
         #region Properties
         private InfraStack Stack { get; }
         private Config Config { get; } = new Config();
-        private Config GitHubConfig { get; } = new Config("github");
         #endregion
         
         #region Initialization
@@ -43,8 +40,6 @@ namespace WakerUpper.Infra
             Project buildProject = CreateBuildProject(bucket);
             Role cloudFormationRole = CreateCloudFormationRole();
             Pipeline pipeline = CreatePipeline(bucket, pipelineRole, buildProject, cloudFormationRole);
-            PipelineWebhook webhook = CreatePipelineWebhook(pipeline);
-            CreateRepoWebhook(webhook);
         }
         #endregion
 
@@ -198,7 +193,7 @@ namespace WakerUpper.Infra
         {
             Pipeline pipeline = new Pipeline("WakerUpper", new PipelineArgs
             {
-                ArtifactStore = new PipelineArtifactStoreArgs
+                ArtifactStores = new PipelineArtifactStoreArgs
                 {
                     Type = "S3",
                     Location = bucket.BucketName,
@@ -215,16 +210,15 @@ namespace WakerUpper.Infra
                             {
                                 Name = "Source",
                                 Category = "Source",
-                                Owner = "ThirdParty",
-                                Provider = "GitHub",
+                                Owner = "AWS",
+                                Provider = "CodeStarSourceConnection",
                                 Version = "1",
                                 Configuration =
                                 {
-                                    { "Owner", Config.Require("githubOwner") },
-                                    { "Repo", Config.Require("githubRepo") },
-                                    { "Branch", Config.Require("githubBranch") },
-                                    { "OAuthToken", GitHubConfig.RequireSecret("token") },
-                                    { "PollForSourceChanges", "false" },
+                                    { "ConnectionArn", Config.Require("codeStarConnectionArn") },
+                                    { "FullRepositoryId", $"{Config.Require("githubOwner")}/{Config.Require("githubRepo")}" },
+                                    { "BranchName", Config.Require("githubBranch") },
+                                    { "DetectChanges", "true" },
                                 },
                                 OutputArtifacts = { "SourceArtifact" },
                             },
@@ -377,49 +371,6 @@ namespace WakerUpper.Infra
                 },
             });
             return pipeline;
-        }
-        #endregion
-
-        #region Webhooks
-        private PipelineWebhook CreatePipelineWebhook(Pipeline pipeline)
-        {
-            string branch = Config.Require("githubBranch");
-            
-            PipelineWebhook webhook = new PipelineWebhook("WakerUpper", new PipelineWebhookArgs
-            {
-                Authentication = "GITHUB_HMAC",
-                AuthenticationConfiguration = new WebhookAuthenticationConfigurationArgs
-                {
-                    SecretToken = Config.RequireSecret("webhookSecret"),
-                },
-                Filters = new WebhookFilterArgs
-                {
-                    JsonPath = "$.ref",
-                    MatchEquals = $"refs/heads/{branch}",
-                },
-                TargetAction = "Source",
-                TargetPipeline = pipeline.Name,
-            });
-            
-            Stack.PipelineWebhookUrl = webhook.Url;
-            
-            return webhook;
-        }
-
-        private void CreateRepoWebhook(PipelineWebhook pipelineWebhook)
-        {
-            RepositoryWebhook repoWebhook = new RepositoryWebhook($"Pulumi-CodePipeline", new RepositoryWebhookArgs
-            {
-                Repository = Config.Require("githubRepo"),
-                Events = "push",
-                Configuration = new RepositoryWebhookConfigurationArgs
-                {
-                    ContentType = "json",
-                    InsecureSsl = false,
-                    Secret = Config.RequireSecret("webhookSecret"),
-                    Url = pipelineWebhook.Url,
-                }
-            });
         }
         #endregion
     }

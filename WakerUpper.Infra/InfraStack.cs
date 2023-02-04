@@ -5,8 +5,6 @@ namespace WakerUpper.Infra
     internal class InfraStack : Stack
     {
         [Output]
-        public Output<string>? PipelineWebhookUrl { get; set; }
-        [Output]
         public Output<string>? SourcePhoneNumberParameterName { get; set; }
         [Output]
         public Output<string>? TargetPhoneNumberParameterName { get; set; }
