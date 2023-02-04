@@ -5,7 +5,6 @@
     <LangVersion>8.0</LangVersion>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <AWSProjectType>Lambda</AWSProjectType>
-    <RootNamespace>WakerUpper.Asp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
