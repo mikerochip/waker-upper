@@ -52,7 +52,7 @@
       "Properties": {
         "Handler": "WakerUpper.WebApp::WakerUpper.WebApp.LambdaAspEntryPoint::FunctionHandlerAsync",
         "Policies": [
-          "AWSLambdaFullAccess",
+          "AWSLambda_FullAccess",
           "AmazonSSMFullAccess",
           "CloudWatchEventsFullAccess"
         ],

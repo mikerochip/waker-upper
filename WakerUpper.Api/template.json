@@ -70,7 +70,7 @@
       "Properties": {
         "Handler": "WakerUpper.Api::WakerUpper.Api.Function::SendSmsAsync",
         "Policies": [
-          "AWSLambdaFullAccess",
+          "AWSLambda_FullAccess",
           "AmazonSSMReadOnlyAccess"
         ],
         "Events": {
@@ -97,7 +97,7 @@
       "Properties": {
         "Handler": "WakerUpper.Api::WakerUpper.Api.Function::ReceiveSmsAsync",
         "Policies": [
-          "AWSLambdaFullAccess",
+          "AWSLambda_FullAccess",
           "AmazonSSMFullAccess"
         ],
         "Environment": {
