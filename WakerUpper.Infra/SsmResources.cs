@@ -38,6 +38,7 @@ namespace WakerUpper.Infra
                 Type = "SecureString",
                 Value = FakePhoneNumber,
                 AllowedPattern = PhoneNumberRegex,
+                Overwrite = true,
             });
             Stack.SourcePhoneNumberParameterName = sourcePhoneNumber.Name;
             
@@ -47,6 +48,7 @@ namespace WakerUpper.Infra
                 Type = "SecureString",
                 Value = FakePhoneNumber,
                 AllowedPattern = PhoneNumberRegex,
+                Overwrite = true,
             });
             Stack.TargetPhoneNumberParameterName = targetPhoneNumber.Name;
             
@@ -55,6 +57,7 @@ namespace WakerUpper.Infra
                 Name = "/WakerUpper/Message",
                 Type = "String",
                 Value = "Wake up!",
+                Overwrite = true,
             });
             Stack.MessageParameterName = message.Name;
         }
@@ -68,6 +71,7 @@ namespace WakerUpper.Infra
                 Name = "/WakerUpper/TwilioAccountSid",
                 Type = "SecureString",
                 Value = Config.RequireSecret("twilioAccountSid"),
+                Overwrite = true,
             });
             Stack.TwilioAccountSidParameterName = accountSid.Name;
             
@@ -76,6 +80,7 @@ namespace WakerUpper.Infra
                 Name = "/WakerUpper/TwilioAuthToken",
                 Type = "SecureString",
                 Value = Config.RequireSecret("twilioAuthToken"),
+                Overwrite = true,
             });
             Stack.TwilioAuthTokenParameterName = authToken.Name;
         }
