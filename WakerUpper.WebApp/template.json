@@ -28,7 +28,7 @@
       "MemorySize": 512,
       "Timeout": 30,
       "Tracing": "PassThrough",
-      "CodeUri": "bin/Release/netcoreapp3.1/publish",
+      "CodeUri": "bin/Release/net6.0/publish",
       "AutoPublishAlias": "Live",
       "DeploymentPreference": {
         "Type": "AllAtOnce"

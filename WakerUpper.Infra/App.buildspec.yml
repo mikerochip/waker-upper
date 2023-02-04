@@ -2,9 +2,9 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      dotnet: 3.1
+      dotnet: 6.0
     commands:
-      - dotnet tool install -g Amazon.Lambda.Tools --version 4.0.0
+      - dotnet tool install -g Amazon.Lambda.Tools --version 5.6.3
       # see https://github.com/dotnet/sdk/issues/9304#issuecomment-401670622
       - echo "$(dirname $(realpath $(which dotnet)))"
       - export DOTNET_ROOT=$(dirname $(realpath $(which dotnet)))

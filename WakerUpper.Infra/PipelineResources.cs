@@ -111,7 +111,7 @@ namespace WakerUpper.Infra
                         new ProjectEnvironmentEnvironmentVariableArgs
                         {
                             Name = "Framework",
-                            Value = "netcoreapp3.1",
+                            Value = "net6.0",
                         },
                         new ProjectEnvironmentEnvironmentVariableArgs
                         {
