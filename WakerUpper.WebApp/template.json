@@ -24,7 +24,7 @@
       "EndpointConfiguration": "REGIONAL"
     },
     "Function": {
-      "Runtime": "dotnetcore3.1",
+      "Runtime": "dotnet6",
       "MemorySize": 512,
       "Timeout": 30,
       "Tracing": "PassThrough",
