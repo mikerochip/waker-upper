@@ -263,7 +263,7 @@ namespace WakerUpper.Infra
                                     },
                                 },
                                 OutputArtifacts = { "WebAppBuildArtifact" },
-                                RunOrder = 1,
+                                RunOrder = 2,
                             },
                         },
                     },
