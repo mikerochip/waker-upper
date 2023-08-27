@@ -10,8 +10,6 @@ using Pulumi.Aws.S3;
 using Pulumi.Aws.S3.Inputs;
 
 using Config = Pulumi.Config;
-using PipelineWebhook = Pulumi.Aws.CodePipeline.Webhook;
-using PipelineWebhookArgs = Pulumi.Aws.CodePipeline.WebhookArgs;
 
 namespace WakerUpper.Infra
 {
